@@ -1,8 +1,6 @@
 
 var express = require('express');
 var app = express();
-/*
-app.use(express.bodyParser());
 
 app.get('/', function(req, res) {
   console.log(req);
@@ -38,7 +36,7 @@ app.post('/instagram', function(req, res) {
 });
 
 app.listen();
-*/
+
 
 
 Parse.Cloud.define('hello', function(req, res) {
