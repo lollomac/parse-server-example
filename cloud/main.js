@@ -1,9 +1,9 @@
 
 var express = require('express');
 var app = express();
-
-app.use(express.bodyParser());
 /*
+app.use(express.bodyParser());
+
 app.get('/', function(req, res) {
   console.log(req);
   res.send('It works!');
