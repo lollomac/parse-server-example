@@ -7,7 +7,7 @@ app.get('/', function(req, res) {
   console.log(req);
   res.send('It works!');
 });
-*/
+
 
 app.get(['/facebook', '/instagram'], function(req, res) {
   if (
@@ -38,7 +38,7 @@ app.post('/instagram', function(req, res) {
 });
 
 app.listen();
-
+*/
 
 
 Parse.Cloud.define('hello', function(req, res) {
