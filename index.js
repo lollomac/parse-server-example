@@ -40,7 +40,7 @@ app.get('/', function(req, res) {
 });
 
 //HEROKU WEBHOOKS FB
-/*
+
 var bodyParser = require('body-parser');
 var xhub = require('express-x-hub');
 
@@ -49,11 +49,6 @@ app.listen(app.get('port'));
 
 app.use(xhub({ algorithm: 'sha1', secret: process.env.APP_SECRET }));
 app.use(bodyParser.json());
-
-app.get('/', function(req, res) {
-  console.log(req);
-  res.send('It works!');
-});
 
 app.get(['/facebook', '/instagram'], function(req, res) {
   if (
@@ -96,7 +91,7 @@ app.post('/instagram', function(req, res) {
 });
 
 app.listen();
-*/
+
 
 /* PARSE WEBHOOKS FB
 app.get(['/facebook', '/instagram'], function(req, res) {
