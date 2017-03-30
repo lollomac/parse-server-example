@@ -41,7 +41,7 @@ app.get('/', function(req, res) {
 });
 
 //HEROKU WEBHOOKS FB
-
+/*
 var bodyParser = require('body-parser');
 var xhub = require('express-x-hub');
 
@@ -92,7 +92,7 @@ app.post('/instagram', function(req, res) {
 });
 
 app.listen();
-
+*/
 
 /* PARSE WEBHOOKS FB
 app.get(['/facebook', '/instagram'], function(req, res) {
