@@ -36,9 +36,9 @@ app.post('/instagram', function(req, res) {
   // Process the Instagram updates here
   res.send(200);
 });
-
-app.listen();
 */
+app.listen();
+
 
 
 Parse.Cloud.define('hello', function(req, res) {
