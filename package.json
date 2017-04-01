@@ -14,7 +14,6 @@
     "parse": "~1.8.0",
     "parse-server": "*",
     "body-parser": "~1.15.0",
-    "express": "~4.13.3",
     "express-x-hub": "^1.0.4"
   },
   "scripts": {
