@@ -3,7 +3,7 @@ var express = require('express');
 var app = express();
 
 var bodyParser = require('body-parser');
-//app.use(express.bodyParser());
+app.use(bodyParser);
 
 app.get('/', function(req, res) {
   console.log(req);
