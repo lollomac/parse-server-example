@@ -41,7 +41,7 @@ app.get('/', function(req, res) {
 });
 
 //HEROKU WEBHOOKS FB
-
+/*
 var bodyParser = require('body-parser');
 var xhub = require('express-x-hub');
 
@@ -50,7 +50,7 @@ app.listen(app.get('port'));
 
 app.use(xhub({ algorithm: 'sha1', secret: process.env.APP_SECRET }));
 app.use(bodyParser.json());
-/*
+
 app.get(['/facebook', '/instagram'], function(req, res) {
   if (
     req.param('hub.mode') == 'subscribe' &&
