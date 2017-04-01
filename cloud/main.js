@@ -10,7 +10,7 @@ app.get('/', function(req, res) {
   res.send('It works!');
 });
 
-/*
+
 app.get(['/facebook', '/instagram'], function(req, res) {
   if (
     req.param('hub.mode') == 'subscribe' &&
@@ -38,7 +38,7 @@ app.post('/instagram', function(req, res) {
   // Process the Instagram updates here
   res.send(200);
 });
-
+/*
 app.listen();
 */
 
