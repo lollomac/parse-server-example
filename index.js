@@ -50,7 +50,7 @@ app.listen(app.get('port'));
 
 app.use(xhub({ algorithm: 'sha1', secret: process.env.APP_SECRET }));
 app.use(bodyParser.json());
-
+*/
 app.get(['/facebook', '/instagram'], function(req, res) {
   if (
     req.param('hub.mode') == 'subscribe' &&
@@ -90,7 +90,7 @@ app.post('/instagram', function(req, res) {
   // Process the Instagram updates here
   res.sendStatus(200);
 });
-
+/*
 app.listen();
 */
 
