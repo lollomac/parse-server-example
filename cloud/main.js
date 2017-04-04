@@ -11,7 +11,7 @@ app.get('/', function(req, res) {
   res.send('It works!');
 });
 
-/*
+
 app.get(['/facebook', '/instagram'], function(req, res) {
   if (
     req.param('hub.mode') == 'subscribe' &&
@@ -38,7 +38,7 @@ app.post('/instagram', function(req, res) {
 });
 
 app.listen();
-*/
+
 
 
 Parse.Cloud.define('hello', function(req, res) {
