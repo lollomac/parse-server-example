@@ -5,13 +5,13 @@ var app = express();
 var bodyParser = require('body-parser');
 app.use(bodyParser);
 
-/*
+
 app.get('/', function(req, res) {
   console.log(req);
   res.send('It works!');
 });
 
-
+/*
 app.get(['/facebook', '/instagram'], function(req, res) {
   if (
     req.param('hub.mode') == 'subscribe' &&
