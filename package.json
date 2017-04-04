@@ -14,7 +14,8 @@
     "parse": "~1.8.0",
     "parse-server": "*",
     "body-parser": "~1.15.0",
-    "express-x-hub": "^1.0.4"
+    "express-x-hub": "^1.0.4",
+    "underscore": "1.8.3"
   },
   "scripts": {
     "start": "node index.js"
