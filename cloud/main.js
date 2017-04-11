@@ -610,7 +610,7 @@ Parse.Cloud.define("doReturnMyChallenge", function (request, response) {
 
 	var userObject1 = null;
 	var userObject2 = null;
-
+	console.log(fbUserId);
 	Parse.Cloud.useMasterKey();
 	var userQuery = new Parse.Query(Parse.User);
 	userQuery.equalTo("fbUserId", fbUserId);
