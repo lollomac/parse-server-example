@@ -18,7 +18,7 @@
     "underscore": "1.8.3"
   },
   "scripts": {
-    "start": "node ./Parse-Dashboard/index.js --config ./Parse-Dashboard     /parse-dashboard-config.json --allowInsecureHTTP=1"
+    "start": "node index.js"
   },
   "engines": {
     "node": ">=4.3"
