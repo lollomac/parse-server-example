@@ -177,7 +177,9 @@ Parse.Cloud.define("doReturnCurrentWeekRanking", function (request, response) {
 
 });
 
-
+Parse.Cloud.define("doTestLog", function (request, response) {
+	Console.log("doTestLog")
+})
 
 /********************* PROD ********************/
 
