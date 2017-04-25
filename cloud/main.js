@@ -623,8 +623,11 @@ Parse.Cloud.define("doReturnMyChallenge", function (request, response) {
 				//var challenge2 = new Parse.Query("Challenge");
 				//challenge2.equalTo("user2", userRetrieved);
 				//var queryChallenge = Parse.Query.or(challenge1, challenge2);
+
+				var userQuery = new Parse.Query(Parse.User);
+				userQuery.equalTo("fbUserId", fbUserId);
 				var queryChallenge = new Parse.Query("Challenge");
-				queryChallenge.matchesQuery("users", userObject1);
+				queryChallenge.matchesQuery("users", userQuery);
 				queryChallenge.find({
 					success: function (results_challenge) {
 						return Parse.Promise.as().then(function () {
