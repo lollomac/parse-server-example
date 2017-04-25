@@ -714,7 +714,7 @@ Parse.Cloud.define("doReturnMyChallenge", function (request, response) {
 													challengeObject['fbUserId1'] = userRetrieved.get('fbUserId');
 												},
 												error: function (error) {
-													response.error("user error.code: " + error.code + " error.message: " + error.message);
+													response.error("user fbUserId1 error.code: " + error.code + " error.message: " + error.message);
 												}
 											});
 
@@ -764,7 +764,7 @@ Parse.Cloud.define("doReturnMyChallenge", function (request, response) {
 					},
 					error: function (error) {
 						console.log('query find error');
-						response.error("user error.code: " + error.code + " error.message: " + error.message);
+						response.error("user results_challenge error.code: " + error.code + " error.message: " + error.message);
 					}
 				});
 
