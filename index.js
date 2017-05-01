@@ -2,6 +2,7 @@
 // compatible API routes.
 var bodyParser = require('body-parser');
 var express = require('express');
+var xhub = require('express-x-hub');
 var ParseServer = require('parse-server').ParseServer;
 var path = require('path');
 
