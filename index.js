@@ -29,6 +29,9 @@ var api = new ParseServer({
 
 var app = express();
 
+app.set('port', (process.env.PORT || 5000));
+app.listen(app.get('port'));
+
 // Serve static assets from the /public folder
 app.use('/public', express.static(path.join(__dirname, '/public')));
 
