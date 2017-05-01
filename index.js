@@ -37,9 +37,11 @@ var mountPath = process.env.PARSE_MOUNT || '/parse';
 app.use(mountPath, api);
 
 // Parse Server plays nicely with the rest of your web routes
+/*
 app.get('/', function(req, res) {
   res.status(200).send('I dream of being a website.  Please star the parse-server repo on GitHub!');
 });
+*/
 
 // There will be a test page available on the /test path of your server url
 // Remove this before launching your app
@@ -60,7 +62,7 @@ ParseServer.createLiveQueryServer(httpServer);
 
 
 //app.set('port', (process.env.PORT || 5000));
-//app.listen(app.get('port'));
+app.listen(app.get('port'));
 
 app.use(xhub({ algorithm: 'sha1', secret: process.env.APP_SECRET }));
 app.use(bodyParser.json());
