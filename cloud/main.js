@@ -9,6 +9,10 @@ Parse.Cloud.define('hello', function(req, res) {
 
 var _ = require('underscore');
 
+function test() {
+	console.log('test test test test test')
+}
+
 Parse.Cloud.define("countLikeFriends", function (request, response) {
 
 	//var userId = request.params.userId;
