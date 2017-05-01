@@ -75,6 +75,7 @@ app.get('/', function(req, res) {
 });
 
 app.get(['/facebook', '/instagram'], function(req, res) {
+  console.log('/facebook');
   if (
     req.param('hub.mode') == 'subscribe' &&
     req.param('hub.verify_token') == 'token'
