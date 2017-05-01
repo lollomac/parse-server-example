@@ -1,6 +1,6 @@
 // Example express application adding the parse-server module to expose Parse
 // compatible API routes.
-
+var bodyParser = require('body-parser');
 var express = require('express');
 var ParseServer = require('parse-server').ParseServer;
 var path = require('path');
