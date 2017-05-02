@@ -6,7 +6,7 @@ var _ = require('underscore');
 Parse.Cloud.define("test", function (request, response) {
 	//console.log('test test test test test');
 	//console.log(request.params.body);
-	console.log(JSON.stringify(request.params.req));
+	console.log(JSON.stringify(request.params.body));
 });
 
 Parse.Cloud.define("countLikeFriends", function (request, response) {
