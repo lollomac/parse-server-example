@@ -64,7 +64,7 @@ ParseServer.createLiveQueryServer(httpServer);
 
 //app.set('port', (process.env.PORT || 5000));
 //app.listen(app.get('port'));
-
+/*
 app.use(xhub({ algorithm: 'sha1', secret: process.env.APP_SECRET }));
 app.use(bodyParser.json());
 
@@ -110,7 +110,7 @@ app.post('/instagram', function(req, res) {
   received_updates.unshift(req.body);
   res.sendStatus(200);
 });
-
+*/
 //app.listen();
 
 
