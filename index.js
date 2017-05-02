@@ -98,7 +98,16 @@ app.post('/facebook', function(req, res) {
   console.log('request header X-Hub-Signature validated');
   // Process the Facebook updates here
   received_updates.unshift(req.body);
-  Parse.Cloud.run('test', {body: req.body});
+  Parse.Cloud.run('test', {body: req.body}, {
+    success: function(object) {
+      console.log("success");
+        callback.success(object);
+    },
+    error: function(error) {
+      console.log("Function failed");
+        callback.error("Function failed");
+    }
+    });
   res.sendStatus(200);
 });
 
