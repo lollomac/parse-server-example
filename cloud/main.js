@@ -1,6 +1,9 @@
 
 
-
+var express = require('express');		
+var app = express();				
+var bodyParser = require('body-parser');		
+app.use(bodyParser);
 
 Parse.Cloud.define('hello', function(req, res) {
   res.success('Hi');
