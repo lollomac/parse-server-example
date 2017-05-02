@@ -7,13 +7,15 @@ Parse.Cloud.define('hello', function(req, res) {
 });
 
 
-var _ = require('underscore');
 
+/*
 var test = function test(){
 	console.log('test test test test test');
 };
 
 module.exports.test = test;
+*/
+var _ = require('underscore');
 
 Parse.Cloud.define("countLikeFriends", function (request, response) {
 
