@@ -1,13 +1,11 @@
 
 
 
-var test = function test(){
-	console.log('test test test test test');
-};
-
-module.exports.test = test;
-
 var _ = require('underscore');
+
+Parse.Cloud.define("countLikeFriends", function (request, response) {
+	console.log('test test test test test');
+});
 
 Parse.Cloud.define("countLikeFriends", function (request, response) {
 
