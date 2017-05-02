@@ -5,7 +5,7 @@ var express = require('express');
 var xhub = require('express-x-hub');
 var ParseServer = require('parse-server').ParseServer;
 var path = require('path');
-var cloudCode = require('./cloud/main.js');
+//var cloudCode = require('./cloud/main.js');
 
 var databaseUri = process.env.DATABASE_URI || process.env.MONGODB_URI;
 
@@ -99,7 +99,7 @@ app.post('/facebook', function(req, res) {
   console.log('request header X-Hub-Signature validated');
   // Process the Facebook updates here
   received_updates.unshift(req.body);
-  cloudCode.test();
+  Parse.Cloud.run('test');
   res.sendStatus(200);
 });
 
