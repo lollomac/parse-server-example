@@ -1,23 +1,12 @@
 
 
-var express = require('express');		
-var app = express();				
-var bodyParser = require('body-parser');		
-app.use(bodyParser);
 
-Parse.Cloud.define('hello', function(req, res) {
-  res.success('Hi');
-});
-
-
-
-/*
 var test = function test(){
 	console.log('test test test test test');
 };
 
 module.exports.test = test;
-*/
+
 var _ = require('underscore');
 
 Parse.Cloud.define("countLikeFriends", function (request, response) {
