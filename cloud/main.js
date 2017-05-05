@@ -113,7 +113,7 @@ Parse.Cloud.define("countLikeFriends", function (request, response) {
 			response.error("?fields=me error.code: " + error.code + " error.message: " + error.message);
 
 		}
-    });
+	});
 
 
 });
@@ -132,11 +132,11 @@ function getFriday(d) {
 
 function getNextWeekMonday(d) {
 	var d = new Date(d);
-    var diff = d.getDate() - d.getDay() + 1;
-    if (d.getDay() == 0)
-        diff -= 7;
-    diff += 7;
-    return new Date(d.setDate(diff));
+	var diff = d.getDate() - d.getDay() + 1;
+	if (d.getDay() == 0)
+		diff -= 7;
+	diff += 7;
+	return new Date(d.setDate(diff));
 }
 
 function getNextWeekFriday(d) {
@@ -148,7 +148,68 @@ function getNextWeekFriday(d) {
 
 Parse.Cloud.define("doReturnChallengeFeeds", function (request, response) {
 
+	var challengeId = request.params.challengeId;
+	var result = [];
+
+	var Challenge = Parse.Object.extend("Challenge");
+	var query = new Parse.Query(Challenge);
+	query.get(challengeId, {
+		success: function (challenge) {
+			var challengeUsers = challenge.relation('users');
+			var query = challengeUsers.query();
+			query.each(function (userObject) {
+				var promise = Parse.Promise.as();
+				promise = promise.then(function () {
+					return getUserFeeds(challenge, userObject);
+				}).then(function (userFeeds) {
+					var userJson = {};
+					userJson["userId"] = userObject.id;
+					userJson['fbUserId'] = userObject.get('fbUserId');
+					userJson['name'] = userObject.get('name');
+					userJson['feeds'] = userFeeds;
+					result.push(userJson);
+				});
+			})
+		},
+		error: function (object, error) {
+			console.log("[doReturnChallengeFeeds] - error query.get challengeId ");
+		}
+	});
+
+
 });
+
+function getUserFeeds(challenge, user, callback) {
+
+	var userFeeds = [];
+	var fbStartDateTimestamp = challenge.get('fbStartDateTimestamp');
+	var fbEndDateTimestamp = challenge.get('fbEndDateTimestamp');
+	var fbUserAccessToken = user.get('fbUserAccessToken')
+	var path = 'https://graph.facebook.com/v2.6/me?fields=feed.since(' + fbStartDateTimestamp + ').until(' + fbEndDateTimestamp + ').limit(100){picture,type,attachments,from,created_time,likes.summary(1)}&access_token=' + fbUserAccessToken;
+
+	var promise = new Parse.Promise();
+	Parse.Cloud.httpRequest({
+		url: path
+	}).then(function (httpResponse) {
+		if (httpResponse.data.feed != undefined) {
+			console.log('feed count ' + httpResponse.data.feed.data.length + ' name: ' + user.get('name'));
+			var feeds = httpResponse.data.feed.data;
+			for (var i = 0; i < feeds.length; i++) {
+				if (feeds[i].type == "photo" && feeds[i].from.id == user.get('fbUserId')) {
+					userFeeds.push(feeds[i]);
+				}
+			}
+			return userFeeds;
+		} else {
+			console.log("error httpResponse.data.feed undefined")
+			return userFeeds;
+		}
+	}).then(function (userFeeds) {
+		console.log('userFeeds ' + userFeeds + ' name: ' + user.get('name'));
+		promise.resolve(userFeeds);
+	});
+	return promise;
+}
 
 
 Parse.Cloud.define("doReturnCurrentWeekRanking", function (request, response) {
@@ -179,10 +240,6 @@ Parse.Cloud.define("doReturnCurrentWeekRanking", function (request, response) {
 
 
 });
-
-Parse.Cloud.define("doTestLog", function (request, response) {
-	Console.log("doTestLog")
-})
 
 /********************* PROD ********************/
 
@@ -509,7 +566,7 @@ Parse.Cloud.define("doCreateChallengeUserFriend", function (request, response) {
 				console.log("fbAdminUsersId " + fbAdminUsersId);
 				console.log("parseUserObject[0] " + parseUserObject[0].get('fbUserId'));
 				console.log("parseUserObject[1] " + parseUserObject[1].get('fbUserId'));
-				if(parseUserObject[0].get('fbUserId') == fbAdminUsersId) {
+				if (parseUserObject[0].get('fbUserId') == fbAdminUsersId) {
 					challenge.set("user1", parseUserObject[0]);
 					challenge.set("user2", parseUserObject[1]);
 				} else {
@@ -525,12 +582,12 @@ Parse.Cloud.define("doCreateChallengeUserFriend", function (request, response) {
 			if (typeChallenge == 3) {
 				//internal group friends
 				for (var i = 0; i < parseUserObject.length; i++) {
-					if(parseUserObject[i].get('fbUserId') == fbAdminUsersId) {
+					if (parseUserObject[i].get('fbUserId') == fbAdminUsersId) {
 						challenge.set("user1", parseUserObject[i]);
 						break;
-					
+
 					}
-				}	
+				}
 			}
 
 			challenge.set("typeChallenge", typeChallenge);
@@ -560,7 +617,7 @@ Parse.Cloud.define("doCreateChallengeUserFriend", function (request, response) {
 			response.error("parseUserObject.length < 2");
 		}
 
-				}, function (error) {
+	}, function (error) {
 		response.error("script failed with error.code: " + error.code + " error.message: " + error.message);
 	});
 
@@ -583,11 +640,6 @@ Parse.Cloud.define("doReturnMyChallenge", function (request, response) {
 		({
 			success: function (userRetrieved) {
 				userObject1 = userRetrieved;
-				//var challenge1 = new Parse.Query("Challenge");
-				//challenge1.equalTo("user1", userRetrieved);
-				//var challenge2 = new Parse.Query("Challenge");
-				//challenge2.equalTo("user2", userRetrieved);
-				//var queryChallenge = Parse.Query.or(challenge1, challenge2);
 
 				var userQuery = new Parse.Query(Parse.User);
 				userQuery.equalTo("fbUserId", fbUserId);
@@ -602,126 +654,70 @@ Parse.Cloud.define("doReturnMyChallenge", function (request, response) {
 								promise = promise.then(function () {
 									var promise = new Parse.Promise();
 									var challengeObject = {};
-								})/*.then(function () {
+								}).then(function () {
+									return countLikeForUsersChallenge(challenge);
+								}).then(function (usersArray) {
 
-									Parse.Cloud.useMasterKey();
-									var userQuery = new Parse.Query(Parse.User);
-									userQuery.equalTo("objectId", challenge.get('user2').id);
-									userQuery.first
-										({
-											success: function (userRetrieved2) {
+									usersChallenge = new Array();
+									for (var i = 0; i < usersArray.length; i++) {
+										usersChallenge.push(usersArray[i]);
+									}
 
-												userObject2 = userRetrieved2;
-												return userRetrieved2;
-
-											},
-											error: function (error) {
-												console.log("error " + error.message);
-												return error;
-											}
-										});
-								})*/.then(function () {
-										return countLikeForUsersChallenge(challenge);
-
-									}).then(function (usersArray) {
-
-										usersChallenge = new Array();
-										for (var i = 0; i < usersArray.length; i++) {
-											usersChallenge.push(usersArray[i]);
-										}
-
-										var incrementalWeek = challenge.get('incrementalWeek');
-										var queryLike = new Parse.Query("Like");
-										queryLike.equalTo("user", {
-											__type: "Pointer",
-											className: "_User",
-											objectId: challenge.get('user1').id
-										});
-										queryLike.equalTo('incrementalWeek', incrementalWeek);
-										return queryLike.find({
-											success: function (results_likes) {
-												if (results_likes.length > 0) {
-													challengeObject['likeCountUser1'] = results_likes[0].get('LikeCount');
-												} else {
-													challengeObject['likeCountUser1'] = 0;
-												}
-											},
-											error: function (error) {
-												console.log("script failed with error.code: " + error.code + " error.message: " + error.message);
-												return error;
-											}
-										});
-									})/*.then(function () {
-										var incrementalWeek = challenge.get('incrementalWeek');
-										var queryLike = new Parse.Query("Like");
-										queryLike.equalTo("user", {
-											__type: "Pointer",
-											className: "_User",
-											objectId: challenge.get('user2').id
-										});
-										queryLike.equalTo('incrementalWeek', incrementalWeek);
-										return queryLike.find({
-											success: function (results_likes) {
-												if (results_likes.length > 0) {
-													challengeObject['likeCountUser2'] = results_likes[0].get('LikeCount');
-												} else {
-													challengeObject['likeCountUser2'] = 0;
-												}
-											},
-											error: function (error) {
-												console.log('query find error');
-												return error;
-											}
-										});
-									})*/.then(function () {
-										var userQuery = new Parse.Query(Parse.User);
-										userQuery.equalTo("objectId", challenge.get('user1').id);
-										return userQuery.first
-											({
-												success: function (userRetrieved) {
-													challengeObject['fbUserId1'] = userRetrieved.get('fbUserId');
-												},
-												error: function (error) {
-													response.error("user fbUserId1 error.code: " + error.code + " error.message: " + error.message);
-												}
-											});
-
-
-									})/*.then(function () {
-										var userQuery = new Parse.Query(Parse.User);
-										userQuery.equalTo("objectId", challenge.get('user2').id);
-
-										return userQuery.first
-											({
-												success: function (userRetrieved) {
-													challengeObject['fbUserId2'] = userRetrieved.get('fbUserId');
-												},
-												error: function (error) {
-													response.error("user error.code: " + error.code + " error.message: " + error.message);
-												}
-											});
-
-
-									})*/.then(function () {
-										challengeObject['usersChallenge'] = usersChallenge;
-										challengeObject['username1'] = userObject1.get('name');
-										challengeObject['pfUserId1'] = challenge.get('user1').id;
-										challengeObject['id'] = challenge.id;
-										challengeObject['type'] = challenge.get('type');
-										challengeObject['group1'] = challenge.get('group1');
-										challengeObject['group2'] = challenge.get('group2');
-										challengeObject['startTime'] = challenge.get('startTime');
-										challengeObject['endTime'] = challenge.get('endTime');
-										challengeObject['startDateTimestamp'] = challenge.get('startDateTimestamp');
-										challengeObject['endDateTimestamp'] = challenge.get('endDateTimestamp');
-										challengeObject['fbStartDateTimestamp'] = challenge.get('fbStartDateTimestamp');
-										challengeObject['fbEndDateTimestamp'] = challenge.get('fbEndDateTimestamp');
-										challengeObject['incrementalWeek'] = challenge.get('incrementalWeek');
-										challengeObject['typeChallenge'] = challenge.get('typeChallenge');
-										challengeObject['typeDate'] = challenge.get('typeDate');
-										responseArray.push(challengeObject);
-										return Parse.Promise.as();
+									var incrementalWeek = challenge.get('incrementalWeek');
+									var queryLike = new Parse.Query("Like");
+									queryLike.equalTo("user", {
+										__type: "Pointer",
+										className: "_User",
+										objectId: challenge.get('user1').id
 									});
+									queryLike.equalTo('incrementalWeek', incrementalWeek);
+									return queryLike.find({
+										success: function (results_likes) {
+											if (results_likes.length > 0) {
+												challengeObject['likeCountUser1'] = results_likes[0].get('LikeCount');
+											} else {
+												challengeObject['likeCountUser1'] = 0;
+											}
+										},
+										error: function (error) {
+											console.log("script failed with error.code: " + error.code + " error.message: " + error.message);
+											return error;
+										}
+									});
+								}).then(function () {
+									var userQuery = new Parse.Query(Parse.User);
+									userQuery.equalTo("objectId", challenge.get('user1').id);
+									return userQuery.first
+										({
+											success: function (userRetrieved) {
+												challengeObject['fbUserId1'] = userRetrieved.get('fbUserId');
+											},
+											error: function (error) {
+												response.error("user fbUserId1 error.code: " + error.code + " error.message: " + error.message);
+											}
+										});
+
+
+								}).then(function () {
+									challengeObject['usersChallenge'] = usersChallenge;
+									challengeObject['username1'] = userObject1.get('name');
+									challengeObject['pfUserId1'] = challenge.get('user1').id;
+									challengeObject['id'] = challenge.id;
+									challengeObject['type'] = challenge.get('type');
+									challengeObject['group1'] = challenge.get('group1');
+									challengeObject['group2'] = challenge.get('group2');
+									challengeObject['startTime'] = challenge.get('startTime');
+									challengeObject['endTime'] = challenge.get('endTime');
+									challengeObject['startDateTimestamp'] = challenge.get('startDateTimestamp');
+									challengeObject['endDateTimestamp'] = challenge.get('endDateTimestamp');
+									challengeObject['fbStartDateTimestamp'] = challenge.get('fbStartDateTimestamp');
+									challengeObject['fbEndDateTimestamp'] = challenge.get('fbEndDateTimestamp');
+									challengeObject['incrementalWeek'] = challenge.get('incrementalWeek');
+									challengeObject['typeChallenge'] = challenge.get('typeChallenge');
+									challengeObject['typeDate'] = challenge.get('typeDate');
+									responseArray.push(challengeObject);
+									return Parse.Promise.as();
+								});
 							});
 							return promise;
 						}).then(function () {
