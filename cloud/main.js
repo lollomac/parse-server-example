@@ -171,8 +171,9 @@ Parse.Cloud.define("doReturnChallengeFeeds", function (request, response) {
 					userJson['feeds'] = userFeeds;
 					result.push(userJson);
 				});
-			})
-			response.success(result);
+			}).then(function () {
+				response.success(result);
+			});
 		},
 		error: function (object, error) {
 			console.log("[doReturnChallengeFeeds] - error query.get challengeId");
