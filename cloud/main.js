@@ -148,7 +148,7 @@ function getNextWeekFriday(d) {
 
 Parse.Cloud.define("doReturnChallengeFeeds", function (request, response) {
 	var challengeId = request.params.challengeId;
-	var result = [];
+	var result = new Array();
 
 	console.log("[doReturnChallengeFeeds] " + challengeId);
 	var query = new Parse.Query("Challenge");
@@ -216,7 +216,7 @@ Parse.Cloud.define("doReturnChallengeFeeds", function (request, response) {
 
 function getUserFeeds(challenge, user, callback) {
 
-	var userFeeds = [];
+	var userFeeds = new Array();
 	var fbStartDateTimestamp = challenge.get('fbStartDateTimestamp');
 	var fbEndDateTimestamp = challenge.get('fbEndDateTimestamp');
 	var fbUserAccessToken = user.get('fbUserAccessToken')
