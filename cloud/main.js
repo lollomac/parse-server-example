@@ -147,12 +147,11 @@ function getNextWeekFriday(d) {
 /********************* TEST ********************/
 
 Parse.Cloud.define("doReturnChallengeFeeds", function (request, response) {
-	console.log("[doReturnChallengeFeeds]");
 	var challengeId = request.params.challengeId;
 	var result = [];
 
-	var Challenge = Parse.Object.extend("Challenge");
-	var query = new Parse.Query(Challenge);
+	console.log("[doReturnChallengeFeeds] " + challengeId);
+	var query = new Parse.Query("Challenge");
 	query.get(challengeId, {
 		success: function (challenge) {
 			console.log("[doReturnChallengeFeeds] - challenge" + challenge.id);
