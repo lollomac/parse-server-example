@@ -147,7 +147,7 @@ function getNextWeekFriday(d) {
 /********************* TEST ********************/
 
 Parse.Cloud.define("doReturnChallengeFeeds", function (request, response) {
-
+	console.log("[doReturnChallengeFeeds]");
 	var challengeId = request.params.challengeId;
 	var result = [];
 
@@ -155,13 +155,16 @@ Parse.Cloud.define("doReturnChallengeFeeds", function (request, response) {
 	var query = new Parse.Query(Challenge);
 	query.get(challengeId, {
 		success: function (challenge) {
+			console.log("[doReturnChallengeFeeds] - challenge" + challenge.id);
 			var challengeUsers = challenge.relation('users');
 			var query = challengeUsers.query();
 			query.each(function (userObject) {
+				console.log("[doReturnChallengeFeeds] - userObject" + userObject.get('name'));
 				var promise = Parse.Promise.as();
 				promise = promise.then(function () {
 					return getUserFeeds(challenge, userObject);
 				}).then(function (userFeeds) {
+					console.log("[doReturnChallengeFeeds] - userFeeds" + userFeeds);
 					var userJson = {};
 					userJson["userId"] = userObject.id;
 					userJson['fbUserId'] = userObject.get('fbUserId');
@@ -170,9 +173,11 @@ Parse.Cloud.define("doReturnChallengeFeeds", function (request, response) {
 					result.push(userJson);
 				});
 			})
+			response.success(result);
 		},
 		error: function (object, error) {
-			console.log("[doReturnChallengeFeeds] - error query.get challengeId ");
+			console.log("[doReturnChallengeFeeds] - error query.get challengeId");
+			response.error("[doReturnChallengeFeeds] - error query.get challengeId");
 		}
 	});
 
