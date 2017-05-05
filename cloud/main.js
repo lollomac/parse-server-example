@@ -174,7 +174,6 @@ Parse.Cloud.define("doReturnChallengeFeeds", function (request, response) {
 						result.push(userJson);
 						console.log("[doReturnChallengeFeeds] - result" + result);
 					});
-					return promise;
 				}).then(function (result) {
 					response.success(result);
 				});
