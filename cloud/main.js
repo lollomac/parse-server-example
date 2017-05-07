@@ -150,9 +150,9 @@ Parse.Cloud.define("doReturnChallengeFeeds", function (request, response) {
 	var challengeId = request.params.challengeId;
 	var result = new Array();
 
-	console.log("[doReturnChallengeFeeds] " + "rVauIGVaFC");
+	console.log("[doReturnChallengeFeeds] " + challengeId);
 	var query = new Parse.Query("Challenge");
-	query.equalTo("objectId", "rVauIGVaFC");
+	query.equalTo("objectId", challengeId);
 	query.first
 		({
 			success: function (challenge) {
