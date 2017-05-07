@@ -184,36 +184,6 @@ Parse.Cloud.define("doReturnChallengeFeeds", function (request, response) {
 				response.error("[doReturnChallengeFeeds] - error query.get challengeId");
 			}
 		});
-	// query.find({
-	// 	success: function (challenge) {
-	// 		console.log("[doReturnChallengeFeeds] - challenge" + challenge.id);
-	// 		var challengeUsers = challenge.relation('users');
-	// 		var query = challengeUsers.query();
-	// 		query.each(function (userObject) {
-	// 			console.log("[doReturnChallengeFeeds] - userObject" + userObject.get('name'));
-	// 			var promise = Parse.Promise.as();
-	// 			promise = promise.then(function () {
-	// 				return getUserFeeds(challenge, userObject);
-	// 			}).then(function (userFeeds) {
-	// 				console.log("[doReturnChallengeFeeds] - userFeeds" + userFeeds);
-	// 				var userJson = {};
-	// 				userJson["userId"] = userObject.id;
-	// 				userJson['fbUserId'] = userObject.get('fbUserId');
-	// 				userJson['name'] = userObject.get('name');
-	// 				userJson['feeds'] = userFeeds;
-	// 				result.push(userJson);
-	// 			});
-	// 		}).then(function () {
-	// 			response.success(result);
-	// 		});
-	// 	},
-	// 	error: function (object, error) {
-	// 		console.log("[doReturnChallengeFeeds] - error query.get challengeId");
-	// 		response.error("[doReturnChallengeFeeds] - error query.get challengeId");
-	// 	}
-	// });
-
-
 });
 
 function getUserFeeds(challenge, user, callback) {
@@ -223,7 +193,7 @@ function getUserFeeds(challenge, user, callback) {
 	var fbEndDateTimestamp = challenge.get('fbEndDateTimestamp');
 	var fbUserAccessToken = user.get('fbUserAccessToken')
 	var path = 'https://graph.facebook.com/v2.6/me?fields=feed.since(' + fbStartDateTimestamp + ').until(' + fbEndDateTimestamp + ').limit(100){picture,type,attachments,from,created_time,likes.summary(1)}&access_token=' + fbUserAccessToken;
-
+	console.log("path: " + path);
 	var promise = new Parse.Promise();
 	Parse.Cloud.httpRequest({
 		url: path
