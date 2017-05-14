@@ -199,10 +199,11 @@ function getUserFeeds(challenge, user, callback) {
 		url: path
 	}).then(function (httpResponse) {
 		if (httpResponse.data.feed != undefined) {
-			console.log('feed count ' + httpResponse.data.feed.data.length + ' name: ' + user.get('name'));
+			console.log('feed count ' + httpResponse.data.feed.data.length + ', name: ' + user.get('name'));
 			var feeds = httpResponse.data.feed.data;
 			for (var i = 0; i < feeds.length; i++) {
 				if (feeds[i].type == "photo" && feeds[i].from.id == user.get('fbUserId')) {
+					feeds[i]['fbUserId'] = user.get('fbUserId');
 					userFeeds.push(feeds[i]);
 				}
 			}
