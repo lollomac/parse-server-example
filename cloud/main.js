@@ -192,7 +192,7 @@ function getUserFeeds(challenge, user, callback) {
 	var fbStartDateTimestamp = challenge.get('fbStartDateTimestamp');
 	var fbEndDateTimestamp = challenge.get('fbEndDateTimestamp');
 	var fbUserAccessToken = user.get('fbUserAccessToken')
-	var path = 'https://graph.facebook.com/v2.6/me?fields=feed.since(' + fbStartDateTimestamp + ').until(' + fbEndDateTimestamp + ').limit(100){picture,type,attachments,from,created_time,likes.summary(1)}&access_token=' + fbUserAccessToken;
+	var path = 'https://graph.facebook.com/v2.6/me?fields=feed.since(' + fbStartDateTimestamp + ').until(' + fbEndDateTimestamp + ').limit(100){type,full_picture,from,created_time,likes.summary(1)}&access_token=' + fbUserAccessToken;
 	console.log("path: " + path);
 	var promise = new Parse.Promise();
 	Parse.Cloud.httpRequest({
