@@ -157,20 +157,28 @@ Parse.Cloud.define("doReturnChallengeFeeds", function (request, response) {
 		({
 			success: function (challenge) {
 				console.log("[doReturnChallengeFeeds] - challenge" + challenge.id);
+				var fbUserFeeds = new Array();
+				var instagramUserFeeds = new Array();
 				var challengeUsers = challenge.relation('users');
 				var query = challengeUsers.query();
 				query.each(function (userObject) {
 					console.log("[doReturnChallengeFeeds] - userObject" + userObject.get('name'));
 					var promise = Parse.Promise.as();
 					promise = promise.then(function () {
-						return getUserFeeds(challenge, userObject);
+						return getFBUserFeeds(challenge, userObject);
 					}).then(function (userFeeds) {
-						console.log("[doReturnChallengeFeeds] - userFeeds" + userFeeds);
+						fbUserFeeds = userFeeds;
+						console.log("[doReturnChallengeFeeds] - fbUserFeeds" + fbUserFeeds);
+						return getInstagramUserFeeds(challenge, userObject);
+					}).then(function (userFeeds) {
+						instagramUserFeeds = userFeeds;
+						console.log("[doReturnChallengeFeeds] - instagramUserFeeds" + instagramUserFeeds);
 						var userJson = {};
 						userJson["userId"] = userObject.id;
 						userJson['fbUserId'] = userObject.get('fbUserId');
 						userJson['name'] = userObject.get('name');
-						userJson['feeds'] = userFeeds;
+						userJson['fbFeeds'] = fbUserFeeds;
+						userJson['instagramFeeds'] = instagramUserFeeds;
 						result.push(userJson);
 						console.log("[doReturnChallengeFeeds] - result" + result);
 					});
@@ -186,7 +194,38 @@ Parse.Cloud.define("doReturnChallengeFeeds", function (request, response) {
 		});
 });
 
-function getUserFeeds(challenge, user, callback) {
+function getInstagramUserFeeds(challenge, user, callback) {
+	var userFeeds = new Array();
+	var fbStartDateTimestamp = challenge.get('fbStartDateTimestamp');
+	var fbEndDateTimestamp = challenge.get('fbEndDateTimestamp');
+	var instagramAccessToken = user.get('instagramAccessToken')
+
+	var path = 'https://api.instagram.com/v1/users/self/media/recent?count=200&access_token=' + instagramAccessToken;
+	console.log("path: " + path);
+	var promise = new Parse.Promise();
+	Parse.Cloud.httpRequest({
+		url: path
+	}).then(function (httpResponse) {
+		if (httpResponse.data.feed != undefined) {
+			console.log('feed count ' + httpResponse.data.length + ', name: ' + user.get('name'));
+			var feeds = httpResponse.data;
+			for (var i = 0; i < feeds.length; i++) {
+				feeds[i]['fbUserId'] = user.get('fbUserId');
+				userFeeds.push(feeds[i]);
+			}
+			return userFeeds;
+		} else {
+			console.log("error httpResponse.data undefined")
+			return userFeeds;
+		}
+	}).then(function (userFeeds) {
+		console.log('userFeeds ' + userFeeds + ' name: ' + user.get('name'));
+		promise.resolve(userFeeds);
+	});
+	return promise;
+}
+
+function getFBUserFeeds(challenge, user, callback) {
 
 	var userFeeds = new Array();
 	var fbStartDateTimestamp = challenge.get('fbStartDateTimestamp');
