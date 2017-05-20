@@ -206,9 +206,9 @@ function getInstagramUserFeeds(challenge, user, callback) {
 		Parse.Cloud.httpRequest({
 			url: path
 		}).then(function (httpResponse) {
-			console.log(JSON.stringify(httpResponse));
+			console.log(JSON.stringify(httpResponse.data));
 			if (httpResponse.data != undefined) {
-				console.log('feed count ' + httpResponse.data.length + ', name: ' + user.get('name'));
+				console.log('instagram feed count ' + httpResponse.data.length + ', name: ' + user.get('name'));
 				var feeds = httpResponse.data;
 				for (var i = 0; i < feeds.length; i++) {
 					feeds[i]['fbUserId'] = user.get('fbUserId');
@@ -220,7 +220,7 @@ function getInstagramUserFeeds(challenge, user, callback) {
 				return userFeeds;
 			}
 		}).then(function (userFeeds) {
-			console.log('userFeeds ' + userFeeds + ' name: ' + user.get('name'));
+			console.log('instagram userFeeds ' + userFeeds + ' name: ' + user.get('name'));
 			promise.resolve(userFeeds);
 		});
 		return promise;
