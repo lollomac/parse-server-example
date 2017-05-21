@@ -430,7 +430,7 @@ function countInstagramLikeForUserWeek(fbUserId, startDate, endDate, callback) {
 						} else {
 							return total_like;
 						}
-
+						
 					}).then(function (total_like) {
 
 						var queryLike = new Parse.Query("Like");
@@ -485,36 +485,50 @@ function countInstagramLikeForUserWeek(fbUserId, startDate, endDate, callback) {
 					});
 				} else {
 					var queryLike = new Parse.Query("Like");
-					queryLike.equalTo('user', user);
-					queryLike.equalTo('incrementalWeek', incrementalWeek)
-					queryLike.find({
-						success: function (results_likes) {
-							var total_like = 0;
-							var Like = Parse.Object.extend("Like");
-							like = new Like();
-							like.set("user", user);
-							like.set("LikeCountInstagram", total_like);
-							like.set("startTime", startDate);
-							like.set("endTime", endDate);
-							like.set("startDateTimestamp", startDateTimestamp);
-							like.set("endDateTimestamp", endDateTimestamp);
-							like.set("incrementalWeek", incrementalWeek);
-							like.set("fbStartDateTimestamp", fbStartDateTimestamp);
-							like.set("fbEndDateTimestamp", fbEndDateTimestamp);
-
-							like.save({
-								success: function (user) {
-									promise.resolve(total_like);
-								},
-								error: function (error) {
-									promise.resolve(0);
+						queryLike.equalTo('user', user);
+						queryLike.equalTo('incrementalWeek', incrementalWeek)
+						queryLike.find({
+							success: function (results_likes) {
+								var total_like = 0;
+								var like;
+								if (results_likes.length > 0) {
+									like = results_likes[0];
+									if (like.get('LikeCount') != total_like) {
+									} else {
+										like = null;
+									}
+								} else {
+									var Like = Parse.Object.extend("Like");
+									like = new Like();
 								}
-							});
-						},
-						error: function (error) {
-							promise.resolve(0);
-						}
-					});
+
+								if (like != null) {
+									like.set("user", user);
+									like.set("LikeCountInstagram", total_like);
+									like.set("startTime", startDate);
+									like.set("endTime", endDate);
+									like.set("startDateTimestamp", startDateTimestamp);
+									like.set("endDateTimestamp", endDateTimestamp);
+									like.set("incrementalWeek", incrementalWeek);
+									like.set("fbStartDateTimestamp", fbStartDateTimestamp);
+									like.set("fbEndDateTimestamp", fbEndDateTimestamp);
+
+									like.save({
+										success: function (user) {
+											promise.resolve(total_like);
+										},
+										error: function (error) {
+											promise.resolve(0);
+										}
+									});
+								} else {
+									promise.resolve(total_like);
+								}
+							},
+							error: function (error) {
+								promise.resolve(0);
+							}
+						});
 				}
 
 			},
