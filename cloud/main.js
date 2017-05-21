@@ -1,3 +1,9 @@
+var ig = require('cloud/instagram-v1-1.0.js');
+// Paste your client_id here
+ig.initialize('ad4e3cfdb03d4c83821445b8abf6606a');
+
+// Paste your access_token here if needed
+//ig.setAccessToken('ACCESS_TOKEN');
 
 
 
@@ -198,7 +204,9 @@ function getInstagramUserFeeds(challenge, user, callback) {
 	var userFeeds = new Array();
 	var fbStartDateTimestamp = challenge.get('fbStartDateTimestamp');
 	var fbEndDateTimestamp = challenge.get('fbEndDateTimestamp');
-	var instagramAccessToken = user.get('instagramAccessToken')
+	var instagramAccessToken = user.get('instagramAccessToken');
+
+	/*
 	if (instagramAccessToken != null) {
 		var path = 'https://api.instagram.com/v1/users/self/media/recent?count=200&access_token=' + instagramAccessToken;
 		console.log("path: " + path);
@@ -228,7 +236,38 @@ function getInstagramUserFeeds(challenge, user, callback) {
 		console.log("no instagramAccessToken");
 		var promise = new Parse.Promise();
 		promise.resolve(userFeeds);
-		return userFeeds;
+		return promise;
+	}
+	*/
+
+	if (instagramAccessToken != null) {
+		ig.setAccessToken(instagramAccessToken);
+		var promise = new Parse.Promise();
+		ig.getSelfFeed({
+			count: '100'
+		}).then(function (httpResponse) {
+			var feeds = httpResponse.data;
+				for (var i = 0; i < feeds.length; i++) {
+					feeds[i]['fbUserId'] = user.get('fbUserId');
+					userFeeds.push(feeds[i]);
+				}
+				return userFeeds;
+		},
+		function (error) {
+
+			console.log("error getSelfFeed " + error.message);
+			return userFeeds;
+
+		}).then(function (userFeeds) {
+			console.log('instagram userFeeds ' + userFeeds + ' name: ' + user.get('name'));
+			promise.resolve(userFeeds);
+		});
+		return promise;
+	} else {
+		console.log("no instagramAccessToken");
+		var promise = new Parse.Promise();
+		promise.resolve(userFeeds);
+		return promise;
 	}
 
 }
