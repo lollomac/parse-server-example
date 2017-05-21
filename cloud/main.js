@@ -208,7 +208,7 @@ function getInstagramUserFeeds(challenge, user, callback) {
 	var fbEndDateTimestamp = challenge.get('fbEndDateTimestamp');
 	var instagramAccessToken = user.get('instagramAccessToken');
 	console.log("instagramAccessToken: " + instagramAccessToken + " ***");
-	
+
 	if (instagramAccessToken != null) {
 		var path = 'https://api.instagram.com/v1/users/self/media/recent?count=200&access_token=' + instagramAccessToken;
 		console.log("path: " + path);
@@ -312,6 +312,221 @@ Parse.Cloud.define("doReturnCurrentWeekRanking", function (request, response) {
 
 /********************* PROD ********************/
 
+function countInstagramLikeForUsersChallenge(challenge, callback) {
+	var fbUsersId = challenge.relation('users');
+	console.log(JSON.stringify(fbUsersId));
+	var startDate = challenge.get('startTime');
+	startDate.setHours(00);
+	startDate.setMinutes(00);
+	startDate.setSeconds(01);
+	var startDateTimestamp = startDate.getTime();
+	var fbStartDateTimestamp = Math.round(startDate.getTime() / 1000);
+
+	var endDate = challenge.get('endTime');
+	if (challenge.get('typeChallenge') == 1) {
+		//current week
+		endDate.setDate(startDate.getDate() + 7);
+	}
+
+	if (challenge.get('typeChallenge') == 2) {
+		//current week
+		endDate.setDate(startDate.getDate() + 3);
+	}
+
+	endDate.setHours(23);
+	endDate.setMinutes(59);
+	endDate.setSeconds(59);
+	var endDateTimestamp = endDate.getTime();
+	var fbEndDateTimestamp = Math.round(endDate.getTime() / 1000);
+
+	var month = startDate.getUTCMonth() + 1;
+	var day = startDate.getUTCDate();
+	var year = startDate.getUTCFullYear();
+	var incrementalWeek = year + month + day;
+
+	console.log('countLikeForUsersChallenge fbUsersId.length: ' + fbUsersId.length + ' , startDate: ' + startDate + ' , endDate: ' + endDate + ' , incrementalWeek: ' + incrementalWeek);
+
+	var usersArray = new Array();
+	var promise = new Parse.Promise();
+
+	//recupero tutti gli user object
+	var query = fbUsersId.query();
+	query.each(function (userObject) {
+		console.log("userObject " + userObject.get('name'));
+		var userJson = {};
+		userJson['fbUserId'] = userObject.get('fbUserId');
+		userJson['name'] = userObject.get('name');
+
+		var promise2 = Parse.Promise.as();
+		promise2 = promise2.then(function () {
+			return countInstagramLikeForUserWeek(userObject.get('fbUserId'), challenge.get('startTime'), challenge.get('endTime'));
+		}).then(function (total_like) {
+			userJson['total_like'] = total_like;
+			usersArray.push(userJson);
+		});
+		return promise2;
+	}).then(function () {
+		promise.resolve(usersArray);
+	}, function (error) {
+		promise.resolve(usersArray);
+	});
+	return promise;
+}
+
+function countInstagramLikeForUserWeek(fbUserId, startDate, endDate, callback) {
+
+	startDate.setHours(00);
+	startDate.setMinutes(00);
+	startDate.setSeconds(01);
+	var startDateTimestamp = startDate.getTime();
+	var fbStartDateTimestamp = Math.round(startDate.getTime() / 1000);
+
+	endDate.setDate(startDate.getDate() + 7);
+	endDate.setHours(23);
+	endDate.setMinutes(59);
+	endDate.setSeconds(59);
+	var endDateTimestamp = endDate.getTime();
+	var fbEndDateTimestamp = Math.round(endDate.getTime() / 1000);
+
+	var month = startDate.getUTCMonth() + 1; //months from 1-12
+	var day = startDate.getUTCDate();
+	var year = startDate.getUTCFullYear();
+	var incrementalWeek = year + month + day;
+
+	console.log('countLikeForUserWeek fbUserId: ' + fbUserId + ' , startDate: ' + startDate + ' , endDate: ' + endDate + ' , incrementalWeek: ' + incrementalWeek);
+
+
+	var total_like = 0;
+
+	var promise = new Parse.Promise();
+
+	Parse.Cloud.useMasterKey();
+	var userQuery = new Parse.Query(Parse.User);
+	userQuery.equalTo("fbUserId", fbUserId);
+	userQuery.first
+		({
+			success: function (user) {
+
+				console.log(user.get('name'));
+				total_like = 0;
+				var instagramAccessToken = user.get('instagramAccessToken');
+				if (instagramAccessToken != null) {
+					var path = 'https://api.instagram.com/v1/users/self/media/recent?count=200&access_token=' + instagramAccessToken;
+					console.log('path ' + path);
+					Parse.Cloud.httpRequest({
+						url: path
+					}).then(function (httpResponse) {
+						if (httpResponse.data != undefined) {
+							console.log('feed count ' + httpResponse.data.data.length + ' name: ' + user.get('name'));
+							var feeds = httpResponse.data.data;
+
+							for (var i = 0; i < feeds.length; i++) {
+								total_like = total_like + feeds[i].likes.count;
+							}
+
+							return total_like;
+						} else {
+							console.log("error httpResponse.data.feed undefined")
+							return total_like;
+						}
+						
+					}).then(function (total_like) {
+
+						console.log("startDateTimestamp " + startDateTimestamp)
+						console.log('endDateTimestamp ' + endDateTimestamp);
+						console.log('startDate ' + startDate);
+
+						var queryLike = new Parse.Query("Like");
+						queryLike.equalTo('user', user);
+						queryLike.equalTo('incrementalWeek', incrementalWeek)
+						queryLike.find({
+							success: function (results_likes) {
+
+								console.log('results_likes ' + results_likes);
+								var like;
+								if (results_likes.length > 0) {
+									console.log('found like');
+									like = results_likes[0];
+									console.log("like1 " + like)
+									console.log('LikeCount ' + like.get('LikeCount'));
+									console.log('total_like ' + total_like);
+									if (like.get('LikeCount') != total_like) {
+										console.log('aggiorno LikeCount');
+									} else {
+										console.log('aggiornamento LikeCount non necessario');
+										like = null;
+									}
+								} else {
+									console.log('new like');
+									var Like = Parse.Object.extend("Like");
+									like = new Like();
+								}
+
+								if (like != null) {
+									console.log("like2 " + like)
+									console.log('total_like ' + total_like);
+
+									like.set("user", user);
+									like.set("LikeCountInstagram", total_like);
+									like.set("startTime", startDate);
+									like.set("endTime", endDate);
+									like.set("startDateTimestamp", startDateTimestamp);
+									like.set("endDateTimestamp", endDateTimestamp);
+									like.set("incrementalWeek", incrementalWeek);
+									like.set("fbStartDateTimestamp", fbStartDateTimestamp);
+									like.set("fbEndDateTimestamp", fbEndDateTimestamp);
+
+									like.save({
+										success: function (user) {
+											console.log('save ok');
+											//response.success('save ok');
+											//callback.success(total_like);
+											promise.resolve(total_like);
+										},
+										error: function (error) {
+											console.log('save error');
+											//response.error('save error');
+											//callback.error("Error");
+											promise.resolve(0);
+										}
+									});
+								} else {
+									console.log('like == null');
+									//response.success('save ok');
+									//callback.success(total_like);
+									promise.resolve(total_like);
+								}
+							},
+							error: function (error) {
+								console.log('query find error');
+								//response.error('save error');
+								//callback.error("Error");
+								promise.resolve(0);
+							}
+						});
+
+
+
+					});
+				} else {
+					console.log('like == null');
+					//response.success('save ok');
+					//callback.success(total_like);
+					promise.resolve(total_like);
+				}
+
+			},
+			error: function () {
+				console.log("error queryBusiness");
+				//response.error("error queryBusiness");
+				//callback.error("Error");
+				promise.resolve(0);
+			}
+		});
+
+	return promise;
+
+}
 
 function countLikeForUsersChallenge(challenge, callback) {
 	var fbUsersId = challenge.relation('users');
@@ -723,6 +938,8 @@ Parse.Cloud.define("doReturnMyChallenge", function (request, response) {
 								promise = promise.then(function () {
 									var promise = new Parse.Promise();
 									var challengeObject = {};
+								}).then(function () {
+									return countInstagramLikeForUsersChallenge(challenge);
 								}).then(function () {
 									return countLikeForUsersChallenge(challenge);
 								}).then(function (usersArray) {
