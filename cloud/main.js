@@ -223,9 +223,11 @@ function getInstagramUserFeeds(challenge, user, callback) {
 				var feeds = httpResponse.data.data;
 				console.log('instagram feed count ' + feeds.length + ', name: ' + user.get('name'));
 				for (var i = 0; i < feeds.length; i++) {
-					feeds[i]['fbUserId'] = user.get('fbUserId');
-					feeds[i]['socialType'] = 1;
-					userFeeds.push(feeds[i]);
+					if (feeds[i].created_time >= fbStartDateTimestamp && feeds[i].created_time <= fbEndDateTimestamp) {
+						feeds[i]['fbUserId'] = user.get('fbUserId');
+						feeds[i]['socialType'] = 1;
+						userFeeds.push(feeds[i]);
+					}
 				}
 				return userFeeds;
 			} else {
