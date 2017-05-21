@@ -168,11 +168,11 @@ Parse.Cloud.define("doReturnChallengeFeeds", function (request, response) {
 						return getFBUserFeeds(challenge, userObject);
 					}).then(function (userFeeds) {
 						fbUserFeeds = userFeeds;
-						console.log("[doReturnChallengeFeeds] - fbUserFeeds" + fbUserFeeds);
+						console.log("[doReturnChallengeFeeds] - fbUserFeeds " + fbUserFeeds);
 						return getInstagramUserFeeds(challenge, userObject);
 					}).then(function (userFeeds) {
 						instagramUserFeeds = userFeeds;
-						console.log("[doReturnChallengeFeeds] - instagramUserFeeds" + instagramUserFeeds);
+						console.log("[doReturnChallengeFeeds] - instagramUserFeeds " + instagramUserFeeds);
 						var userJson = {};
 						userJson["userId"] = userObject.id;
 						userJson['fbUserId'] = userObject.get('fbUserId');
@@ -208,10 +208,12 @@ function getInstagramUserFeeds(challenge, user, callback) {
 		Parse.Cloud.httpRequest({
 			url: path
 		}).then(function (httpResponse) {
-			//console.log(JSON.stringify(httpResponse.data));
+			console.log("********* " + user.get('name') + "**********");
+			consoler.log(JSON.stringify(httpResponse.data))
+			console.log("********************************************");
 			if (httpResponse.data != undefined) {
-				console.log('instagram feed count ' + httpResponse.data.length + ', name: ' + user.get('name'));
 				var feeds = httpResponse.data;
+				console.log('instagram feed count ' + feeds.length + ', name: ' + user.get('name'));
 				for (var i = 0; i < feeds.length; i++) {
 					feeds[i]['fbUserId'] = user.get('fbUserId');
 					userFeeds.push(feeds[i]);
