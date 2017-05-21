@@ -206,7 +206,7 @@ function getInstagramUserFeeds(challenge, user, callback) {
 		Parse.Cloud.httpRequest({
 			url: path
 		}).then(function (httpResponse) {
-			console.log(JSON.stringify(httpResponse.data));
+			//console.log(JSON.stringify(httpResponse.data));
 			if (httpResponse.data != undefined) {
 				console.log('instagram feed count ' + httpResponse.data.length + ', name: ' + user.get('name'));
 				var feeds = httpResponse.data;
