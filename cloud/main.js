@@ -681,6 +681,7 @@ function countLikeForUserWeek(fbUserId, startDate, endDate, callback) {
 							}
 
 							if (like != null) {
+								total_like = total_like + like.get('LikeCountInstagram');
 								console.log("like2 " + like)
 								console.log('total_like ' + total_like);
 								like.set("user", user);
