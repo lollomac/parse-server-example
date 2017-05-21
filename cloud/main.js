@@ -430,7 +430,7 @@ function countInstagramLikeForUserWeek(fbUserId, startDate, endDate, callback) {
 						} else {
 							return total_like;
 						}
-						
+
 					}).then(function (total_like) {
 
 						var queryLike = new Parse.Query("Like");
@@ -484,7 +484,37 @@ function countInstagramLikeForUserWeek(fbUserId, startDate, endDate, callback) {
 
 					});
 				} else {
-					promise.resolve(total_like);
+					var queryLike = new Parse.Query("Like");
+					queryLike.equalTo('user', user);
+					queryLike.equalTo('incrementalWeek', incrementalWeek)
+					queryLike.find({
+						success: function (results_likes) {
+							var total_like = 0;
+							var Like = Parse.Object.extend("Like");
+							like = new Like();
+							like.set("user", user);
+							like.set("LikeCountInstagram", total_like);
+							like.set("startTime", startDate);
+							like.set("endTime", endDate);
+							like.set("startDateTimestamp", startDateTimestamp);
+							like.set("endDateTimestamp", endDateTimestamp);
+							like.set("incrementalWeek", incrementalWeek);
+							like.set("fbStartDateTimestamp", fbStartDateTimestamp);
+							like.set("fbEndDateTimestamp", fbEndDateTimestamp);
+
+							like.save({
+								success: function (user) {
+									promise.resolve(total_like);
+								},
+								error: function (error) {
+									promise.resolve(0);
+								}
+							});
+						},
+						error: function (error) {
+							promise.resolve(0);
+						}
+					});
 				}
 
 			},
