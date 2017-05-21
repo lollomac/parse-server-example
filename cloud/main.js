@@ -616,6 +616,9 @@ function countLikeForUserWeek(fbUserId, startDate, endDate, callback) {
 							var like;
 							if (results_likes.length > 0) {
 								like = results_likes[0];
+								console.log("***************** LikeCountInstagram " + like.get('LikeCountInstagram'));
+								total_like = total_like + like.get('LikeCountInstagram');
+								console.log('***************+* total_like ' + total_like);
 								if (like.get('LikeCount') != total_like) {
 								} else {
 									like = null;
@@ -623,12 +626,12 @@ function countLikeForUserWeek(fbUserId, startDate, endDate, callback) {
 							} else {
 								var Like = Parse.Object.extend("Like");
 								like = new Like();
-							}
-
-							if (like != null) {
 								console.log("***************** LikeCountInstagram " + like.get('LikeCountInstagram'));
 								total_like = total_like + like.get('LikeCountInstagram');
 								console.log('***************+* total_like ' + total_like);
+							}
+
+							if (like != null) {
 								like.set("user", user);
 								like.set("LikeCount", total_like);
 								like.set("startTime", startDate);
