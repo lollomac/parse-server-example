@@ -199,7 +199,7 @@ function getInstagramUserFeeds(challenge, user, callback) {
 	var fbStartDateTimestamp = challenge.get('fbStartDateTimestamp');
 	var fbEndDateTimestamp = challenge.get('fbEndDateTimestamp');
 	var instagramAccessToken = user.get('instagramAccessToken');
-
+	console.log("instagramAccessToken: " + instagramAccessToken + " ***");
 	
 	if (instagramAccessToken != null || instagramAccessToken != "") {
 		var path = 'https://api.instagram.com/v1/users/self/media/recent?count=200&access_token=' + instagramAccessToken;
