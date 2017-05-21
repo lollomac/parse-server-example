@@ -201,16 +201,16 @@ function getInstagramUserFeeds(challenge, user, callback) {
 	var instagramAccessToken = user.get('instagramAccessToken');
 
 	
-	if (instagramAccessToken != null) {
+	if (instagramAccessToken != null || instagramAccessToken != "") {
 		var path = 'https://api.instagram.com/v1/users/self/media/recent?count=200&access_token=' + instagramAccessToken;
 		console.log("path: " + path);
 		var promise = new Parse.Promise();
 		Parse.Cloud.httpRequest({
 			url: path
 		}).then(function (httpResponse) {
-			console.log("********* " + user.get('name') + "**********");
-			console.log(JSON.stringify(httpResponse.data.data));
-			console.log("********************************************");
+			//console.log("********* " + user.get('name') + "**********");
+			//console.log(JSON.stringify(httpResponse.data.data));
+			//console.log("********************************************");
 			if (httpResponse.data.data != undefined) {
 				var feeds = httpResponse.data.data;
 				console.log('instagram feed count ' + feeds.length + ', name: ' + user.get('name'));
