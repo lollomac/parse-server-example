@@ -209,7 +209,7 @@ function getInstagramUserFeeds(challenge, user, callback) {
 			url: path
 		}).then(function (httpResponse) {
 			console.log("********* " + user.get('name') + "**********");
-			consoler.log(JSON.stringify(httpResponse.data))
+			console.log(JSON.stringify(httpResponse.data));
 			console.log("********************************************");
 			if (httpResponse.data != undefined) {
 				var feeds = httpResponse.data;
