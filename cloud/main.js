@@ -421,7 +421,9 @@ function countInstagramLikeForUserWeek(fbUserId, startDate, endDate, callback) {
 							var feeds = httpResponse.data.data;
 
 							for (var i = 0; i < feeds.length; i++) {
-								total_like = total_like + feeds[i].likes.count;
+								if (feeds[i].created_time >= fbStartDateTimestamp && feeds[i].created_time <= fbEndDateTimestamp) {
+									total_like = total_like + feeds[i].likes.count;
+								}
 							}
 
 							return total_like;
