@@ -201,7 +201,7 @@ function getInstagramUserFeeds(challenge, user, callback) {
 	var instagramAccessToken = user.get('instagramAccessToken');
 	console.log("instagramAccessToken: " + instagramAccessToken + " ***");
 	
-	if (instagramAccessToken != null || instagramAccessToken != "" || instagramAccessToken != " ") {
+	if (instagramAccessToken != null) {
 		var path = 'https://api.instagram.com/v1/users/self/media/recent?count=200&access_token=' + instagramAccessToken;
 		console.log("path: " + path);
 		var promise = new Parse.Promise();
