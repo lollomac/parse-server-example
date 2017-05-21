@@ -173,12 +173,20 @@ Parse.Cloud.define("doReturnChallengeFeeds", function (request, response) {
 					}).then(function (userFeeds) {
 						instagramUserFeeds = userFeeds;
 						console.log("[doReturnChallengeFeeds] - instagramUserFeeds " + instagramUserFeeds);
+						var socialFeeds = new Array();
+						for (var i = 0; i < fbUserFeeds.length; i++) {
+							socialFeeds.push(fbUserFeeds[i]);
+						}
+						for (var i = 0; i < instagramUserFeeds.length; i++) {
+							socialFeeds.push(instagramUserFeeds[i]);
+						}
 						var userJson = {};
 						userJson["userId"] = userObject.id;
 						userJson['fbUserId'] = userObject.get('fbUserId');
 						userJson['name'] = userObject.get('name');
 						userJson['fbFeeds'] = fbUserFeeds;
 						userJson['instagramFeeds'] = instagramUserFeeds;
+						userJson['socialFeeds'] = socialFeeds;
 						result.push(userJson);
 						console.log("[doReturnChallengeFeeds] - result" + result);
 					});
@@ -216,6 +224,7 @@ function getInstagramUserFeeds(challenge, user, callback) {
 				console.log('instagram feed count ' + feeds.length + ', name: ' + user.get('name'));
 				for (var i = 0; i < feeds.length; i++) {
 					feeds[i]['fbUserId'] = user.get('fbUserId');
+					feeds[i]['socialType'] = 1;
 					userFeeds.push(feeds[i]);
 				}
 				return userFeeds;
@@ -255,6 +264,7 @@ function getFBUserFeeds(challenge, user, callback) {
 			for (var i = 0; i < feeds.length; i++) {
 				if (feeds[i].type == "photo" && feeds[i].from.id == user.get('fbUserId')) {
 					feeds[i]['fbUserId'] = user.get('fbUserId');
+					feeds[i]['socialType'] = 0;
 					userFeeds.push(feeds[i]);
 				}
 			}
