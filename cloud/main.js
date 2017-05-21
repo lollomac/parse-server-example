@@ -209,10 +209,10 @@ function getInstagramUserFeeds(challenge, user, callback) {
 			url: path
 		}).then(function (httpResponse) {
 			console.log("********* " + user.get('name') + "**********");
-			console.log(JSON.stringify(httpResponse.data));
+			console.log(JSON.stringify(httpResponse.data.data));
 			console.log("********************************************");
-			if (httpResponse.data != undefined) {
-				var feeds = httpResponse.data;
+			if (httpResponse.data.data != undefined) {
+				var feeds = httpResponse.data.data;
 				console.log('instagram feed count ' + feeds.length + ', name: ' + user.get('name'));
 				for (var i = 0; i < feeds.length; i++) {
 					feeds[i]['fbUserId'] = user.get('fbUserId');
