@@ -1,4 +1,5 @@
-var ig = require('cloud/instagram-v1-1.0.js');
+
+var ig = require('instagram-v1-1.0.js');
 // Paste your client_id here
 ig.initialize('ad4e3cfdb03d4c83821445b8abf6606a');
 
