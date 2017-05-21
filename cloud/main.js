@@ -344,7 +344,7 @@ function countInstagramLikeForUsersChallenge(challenge, callback) {
 	var year = startDate.getUTCFullYear();
 	var incrementalWeek = year + month + day;
 
-	console.log('countLikeForUsersChallenge fbUsersId.length: ' + fbUsersId.length + ' , startDate: ' + startDate + ' , endDate: ' + endDate + ' , incrementalWeek: ' + incrementalWeek);
+	console.log('countInstagramLikeForUsersChallenge fbUsersId.length: ' + fbUsersId.length + ' , startDate: ' + startDate + ' , endDate: ' + endDate + ' , incrementalWeek: ' + incrementalWeek);
 
 	var usersArray = new Array();
 	var promise = new Parse.Promise();
@@ -393,7 +393,7 @@ function countInstagramLikeForUserWeek(fbUserId, startDate, endDate, callback) {
 	var year = startDate.getUTCFullYear();
 	var incrementalWeek = year + month + day;
 
-	console.log('countLikeForUserWeek fbUserId: ' + fbUserId + ' , startDate: ' + startDate + ' , endDate: ' + endDate + ' , incrementalWeek: ' + incrementalWeek);
+	console.log('countInstagramLikeForUserWeek fbUserId: ' + fbUserId + ' , startDate: ' + startDate + ' , endDate: ' + endDate + ' , incrementalWeek: ' + incrementalWeek);
 
 
 	var total_like = 0;
@@ -412,12 +412,10 @@ function countInstagramLikeForUserWeek(fbUserId, startDate, endDate, callback) {
 				var instagramAccessToken = user.get('instagramAccessToken');
 				if (instagramAccessToken != null) {
 					var path = 'https://api.instagram.com/v1/users/self/media/recent?count=200&access_token=' + instagramAccessToken;
-					console.log('path ' + path);
 					Parse.Cloud.httpRequest({
 						url: path
 					}).then(function (httpResponse) {
 						if (httpResponse.data != undefined) {
-							console.log('feed count ' + httpResponse.data.data.length + ' name: ' + user.get('name'));
 							var feeds = httpResponse.data.data;
 
 							for (var i = 0; i < feeds.length; i++) {
@@ -426,15 +424,10 @@ function countInstagramLikeForUserWeek(fbUserId, startDate, endDate, callback) {
 
 							return total_like;
 						} else {
-							console.log("error httpResponse.data.feed undefined")
 							return total_like;
 						}
 						
 					}).then(function (total_like) {
-
-						console.log("startDateTimestamp " + startDateTimestamp)
-						console.log('endDateTimestamp ' + endDateTimestamp);
-						console.log('startDate ' + startDate);
 
 						var queryLike = new Parse.Query("Like");
 						queryLike.equalTo('user', user);
@@ -445,27 +438,17 @@ function countInstagramLikeForUserWeek(fbUserId, startDate, endDate, callback) {
 								console.log('results_likes ' + results_likes);
 								var like;
 								if (results_likes.length > 0) {
-									console.log('found like');
 									like = results_likes[0];
-									console.log("like1 " + like)
-									console.log('LikeCount ' + like.get('LikeCount'));
-									console.log('total_like ' + total_like);
 									if (like.get('LikeCount') != total_like) {
-										console.log('aggiorno LikeCount');
 									} else {
-										console.log('aggiornamento LikeCount non necessario');
 										like = null;
 									}
 								} else {
-									console.log('new like');
 									var Like = Parse.Object.extend("Like");
 									like = new Like();
 								}
 
 								if (like != null) {
-									console.log("like2 " + like)
-									console.log('total_like ' + total_like);
-
 									like.set("user", user);
 									like.set("LikeCountInstagram", total_like);
 									like.set("startTime", startDate);
@@ -478,29 +461,17 @@ function countInstagramLikeForUserWeek(fbUserId, startDate, endDate, callback) {
 
 									like.save({
 										success: function (user) {
-											console.log('save ok');
-											//response.success('save ok');
-											//callback.success(total_like);
 											promise.resolve(total_like);
 										},
 										error: function (error) {
-											console.log('save error');
-											//response.error('save error');
-											//callback.error("Error");
 											promise.resolve(0);
 										}
 									});
 								} else {
-									console.log('like == null');
-									//response.success('save ok');
-									//callback.success(total_like);
 									promise.resolve(total_like);
 								}
 							},
 							error: function (error) {
-								console.log('query find error');
-								//response.error('save error');
-								//callback.error("Error");
 								promise.resolve(0);
 							}
 						});
@@ -509,17 +480,11 @@ function countInstagramLikeForUserWeek(fbUserId, startDate, endDate, callback) {
 
 					});
 				} else {
-					console.log('like == null');
-					//response.success('save ok');
-					//callback.success(total_like);
 					promise.resolve(total_like);
 				}
 
 			},
 			error: function () {
-				console.log("error queryBusiness");
-				//response.error("error queryBusiness");
-				//callback.error("Error");
 				promise.resolve(0);
 			}
 		});
@@ -622,22 +587,16 @@ function countLikeForUserWeek(fbUserId, startDate, endDate, callback) {
 	userQuery.first
 		({
 			success: function (user) {
-
-				console.log(user.get('name'));
-
 				var fbUserAccessToken = user.get('fbUserAccessToken')
 				var path = 'https://graph.facebook.com/v2.6/me?fields=feed.since(' + fbStartDateTimestamp + ').until(' + fbEndDateTimestamp + ').limit(100){picture,type,attachments,from,likes.summary(1)}&access_token=' + fbUserAccessToken;
 				total_like = 0;
-				console.log('path ' + path);
 				Parse.Cloud.httpRequest({
 					url: path
 				}).then(function (httpResponse) {
 					if (httpResponse.data.feed != undefined) {
-						console.log('feed count ' + httpResponse.data.feed.data.length + ' name: ' + user.get('name'));
 						var feeds = httpResponse.data.feed.data;
 
 						for (var i = 0; i < feeds.length; i++) {
-							console.log('type ' + feeds[i].type);
 							if (feeds[i].type == "photo" && feeds[i].from.id == user.get('fbUserId')) {
 								total_like = total_like + feeds[i].likes.summary.total_count;
 							}
@@ -645,37 +604,23 @@ function countLikeForUserWeek(fbUserId, startDate, endDate, callback) {
 
 						return total_like;
 					} else {
-						console.log("error httpResponse.data.feed undefined")
 						return total_like;
 					}
 				}).then(function (total_like) {
-
-					console.log("startDateTimestamp " + startDateTimestamp)
-					console.log('endDateTimestamp ' + endDateTimestamp);
-					console.log('startDate ' + startDate);
 
 					var queryLike = new Parse.Query("Like");
 					queryLike.equalTo('user', user);
 					queryLike.equalTo('incrementalWeek', incrementalWeek)
 					queryLike.find({
 						success: function (results_likes) {
-
-							console.log('results_likes ' + results_likes);
 							var like;
 							if (results_likes.length > 0) {
-								console.log('found like');
 								like = results_likes[0];
-								console.log("like1 " + like)
-								console.log('LikeCount ' + like.get('LikeCount'));
-								console.log('total_like ' + total_like);
 								if (like.get('LikeCount') != total_like) {
-									console.log('aggiorno LikeCount');
 								} else {
-									console.log('aggiornamento LikeCount non necessario');
 									like = null;
 								}
 							} else {
-								console.log('new like');
 								var Like = Parse.Object.extend("Like");
 								like = new Like();
 							}
@@ -683,7 +628,6 @@ function countLikeForUserWeek(fbUserId, startDate, endDate, callback) {
 							if (like != null) {
 								console.log("***************** LikeCountInstagram " + like.get('LikeCountInstagram'));
 								total_like = total_like + like.get('LikeCountInstagram');
-								console.log("like2 " + like)
 								console.log('***************+* total_like ' + total_like);
 								like.set("user", user);
 								like.set("LikeCount", total_like);
@@ -697,29 +641,17 @@ function countLikeForUserWeek(fbUserId, startDate, endDate, callback) {
 
 								like.save({
 									success: function (user) {
-										console.log('save ok');
-										//response.success('save ok');
-										//callback.success(total_like);
 										promise.resolve(total_like);
 									},
 									error: function (error) {
-										console.log('save error');
-										//response.error('save error');
-										//callback.error("Error");
 										promise.resolve(0);
 									}
 								});
 							} else {
-								console.log('like == null');
-								//response.success('save ok');
-								//callback.success(total_like);
 								promise.resolve(total_like);
 							}
 						},
 						error: function (error) {
-							console.log('query find error');
-							//response.error('save error');
-							//callback.error("Error");
 							promise.resolve(0);
 						}
 					});
@@ -729,9 +661,6 @@ function countLikeForUserWeek(fbUserId, startDate, endDate, callback) {
 				});
 			},
 			error: function () {
-				console.log("error queryBusiness");
-				//response.error("error queryBusiness");
-				//callback.error("Error");
 				promise.resolve(0);
 			}
 		});
