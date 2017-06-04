@@ -938,7 +938,7 @@ Parse.Cloud.define("doReturnMyChallenge", function (request, response) {
 									queryLike.equalTo("user", {
 										__type: "Pointer",
 										className: "_User",
-										objectId: challenge.get('user1').id
+										objectId: userObject1.id
 									});
 									queryLike.equalTo('incrementalWeek', incrementalWeek);
 									return queryLike.find({
@@ -956,7 +956,7 @@ Parse.Cloud.define("doReturnMyChallenge", function (request, response) {
 									});
 								}).then(function () {
 									var userQuery = new Parse.Query(Parse.User);
-									userQuery.equalTo("objectId", challenge.get('user1').id);
+									userQuery.equalTo("objectId", userObject1.id);
 									return userQuery.first
 										({
 											success: function (userRetrieved) {
@@ -971,7 +971,7 @@ Parse.Cloud.define("doReturnMyChallenge", function (request, response) {
 								}).then(function () {
 									challengeObject['usersChallenge'] = usersChallenge;
 									challengeObject['username1'] = userObject1.get('name');
-									//challengeObject['pfUserId1'] = challenge.get('user1').id;
+									challengeObject['pfUserId1'] = userObject1.id;
 									challengeObject['id'] = challenge.id;
 									challengeObject['type'] = challenge.get('type');
 									challengeObject['group1'] = challenge.get('group1');
