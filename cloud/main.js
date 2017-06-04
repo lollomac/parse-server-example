@@ -971,7 +971,7 @@ Parse.Cloud.define("doReturnMyChallenge", function (request, response) {
 								}).then(function () {
 									challengeObject['usersChallenge'] = usersChallenge;
 									challengeObject['username1'] = userObject1.get('name');
-									challengeObject['pfUserId1'] = challenge.get('user1').id;
+									//challengeObject['pfUserId1'] = challenge.get('user1').id;
 									challengeObject['id'] = challenge.id;
 									challengeObject['type'] = challenge.get('type');
 									challengeObject['group1'] = challenge.get('group1');
