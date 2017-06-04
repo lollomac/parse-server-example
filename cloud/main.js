@@ -739,20 +739,21 @@ function getUser(objectId) {
 }
 
 
-Parse.Cloud.define("doCreateChallengeUserFriend", function (request, response) {
+Parse.Cloud.define("doCreateChallenge", function (request, response) {
 
 	var typeChallenge = request.params.typeChallenge;
 	var typeDate = request.params.typeDate;
 	var fbUsersId = request.params.fbUsersId;
 	var fbAdminUsersId = request.params.fbAdminUsersId;
 
-	var startDate;
-	var startDateTimestamp;
-	var fbStartDateTimestamp;
-	var endDate;
-	var endDateTimestamp;
-	var fbEndDateTimestamp;
-	var incrementalWeek;
+	var startDate = request.params.startDate;
+	var endDate = request.params.endDate;
+	var startDateTimestamp = request.params.startDateTimestamp;
+	var endDateTimestamp = request.params.endDateTimestamp;
+	var fbStartDateTimestamp = request.params.fbStartDateTimestamp;
+	var fbEndDateTimestamp = request.params.fbEndDateTimestamp;
+	var incrementalWeek = request.params.incrementalWeek;
+	/*
 	if (typeDate == 1) {
 		//current week default
 		startDate = getMonday(new Date());
@@ -798,7 +799,7 @@ Parse.Cloud.define("doCreateChallengeUserFriend", function (request, response) {
 		var year = startDate.getUTCFullYear();
 		incrementalWeek = year + month + day;
 	}
-
+	*/
 	var jsonResponse = {};
 	var parseUserObject = [];
 
@@ -826,7 +827,7 @@ Parse.Cloud.define("doCreateChallengeUserFriend", function (request, response) {
 			for (var i = 0; i < parseUserObject.length; i++) {
 				relationUsers.add(parseUserObject[i]);
 			}
-
+			/*
 			if (typeChallenge == 1) {
 				//user vs user
 				console.log("fbAdminUsersId " + fbAdminUsersId);
@@ -855,9 +856,10 @@ Parse.Cloud.define("doCreateChallengeUserFriend", function (request, response) {
 					}
 				}
 			}
-
+			*/
 			challenge.set("typeChallenge", typeChallenge);
-			challenge.set("typeDate", typeDate);
+			//challenge.set("typeDate", typeDate);
+			challenge.set("accepted", false);
 			challenge.set("startTime", startDate);
 			challenge.set("endTime", endDate);
 			challenge.set("startDateTimestamp", startDateTimestamp);
