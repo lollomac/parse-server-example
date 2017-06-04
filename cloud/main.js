@@ -985,6 +985,7 @@ Parse.Cloud.define("doReturnMyChallenge", function (request, response) {
 									challengeObject['incrementalWeek'] = challenge.get('incrementalWeek');
 									challengeObject['typeChallenge'] = challenge.get('typeChallenge');
 									challengeObject['typeDate'] = challenge.get('typeDate');
+									challengeObject['accepted'] = challenge.get('accepted');
 									responseArray.push(challengeObject);
 									return Parse.Promise.as();
 								});
