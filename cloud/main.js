@@ -318,6 +318,9 @@ function countInstagramLikeForUsersChallenge(challenge, callback) {
 	var fbUsersId = challenge.relation('users');
 	console.log(JSON.stringify(fbUsersId));
 	var startDate = challenge.get('startTime');
+	var endDate = challenge.get('endTime');
+
+	/*
 	startDate.setHours(00);
 	startDate.setMinutes(00);
 	startDate.setSeconds(01);
@@ -338,13 +341,15 @@ function countInstagramLikeForUsersChallenge(challenge, callback) {
 	endDate.setHours(23);
 	endDate.setMinutes(59);
 	endDate.setSeconds(59);
+	
 	var endDateTimestamp = endDate.getTime();
 	var fbEndDateTimestamp = Math.round(endDate.getTime() / 1000);
 
 	var month = startDate.getUTCMonth() + 1;
 	var day = startDate.getUTCDate();
 	var year = startDate.getUTCFullYear();
-	var incrementalWeek = year + month + day;
+	*/
+	var incrementalWeek = challenge.get('incrementalWeek');
 
 	console.log('countInstagramLikeForUsersChallenge fbUsersId.length: ' + fbUsersId.length + ' , startDate: ' + startDate + ' , endDate: ' + endDate + ' , incrementalWeek: ' + incrementalWeek);
 
@@ -362,7 +367,7 @@ function countInstagramLikeForUsersChallenge(challenge, callback) {
 		var promise2 = Parse.Promise.as();
 		promise2 = promise2.then(function () {
 			if (challenge.get('accepted') == true) {
-				return countInstagramLikeForUserWeek(userObject.get('fbUserId'), challenge.get('startTime'), challenge.get('endTime'));
+				return countInstagramLikeForUserWeek(userObject.get('fbUserId'), challenge);
 			} else {
 				return 0;
 			}
@@ -379,8 +384,8 @@ function countInstagramLikeForUsersChallenge(challenge, callback) {
 	return promise;
 }
 
-function countInstagramLikeForUserWeek(fbUserId, startDate, endDate, callback) {
-
+function countInstagramLikeForUserWeek(fbUserId, challenge, callback) {
+	/*
 	startDate.setHours(00);
 	startDate.setMinutes(00);
 	startDate.setSeconds(01);
@@ -398,6 +403,15 @@ function countInstagramLikeForUserWeek(fbUserId, startDate, endDate, callback) {
 	var day = startDate.getUTCDate();
 	var year = startDate.getUTCFullYear();
 	var incrementalWeek = year + month + day;
+	*/
+
+	var startDate = challenge.get('startTime');
+	var endDate = challenge.get('endTime');
+	var startDateTimestamp = challenge.get('startDateTimestamp');
+	var endDateTimestamp = challenge.get('endDateTimestamp');
+	var fbStartDateTimestamp = challenge.get('fbStartDateTimestamp');
+	var fbEndDateTimestamp = challenge.get('fbEndDateTimestamp');
+	var incrementalWeek = challenge.get('incrementalWeek');
 
 	console.log('countInstagramLikeForUserWeek fbUserId: ' + fbUserId + ' , startDate: ' + startDate + ' , endDate: ' + endDate + ' , incrementalWeek: ' + incrementalWeek);
 
@@ -548,6 +562,7 @@ function countInstagramLikeForUserWeek(fbUserId, startDate, endDate, callback) {
 function countLikeForUsersChallenge(challenge, callback) {
 	var fbUsersId = challenge.relation('users');
 	console.log(JSON.stringify(fbUsersId));
+	/*
 	var startDate = challenge.get('startTime');
 	startDate.setHours(00);
 	startDate.setMinutes(00);
@@ -576,6 +591,11 @@ function countLikeForUsersChallenge(challenge, callback) {
 	var day = startDate.getUTCDate();
 	var year = startDate.getUTCFullYear();
 	var incrementalWeek = year + month + day;
+	*/
+
+	var startDate = challenge.get('startTime');
+	var endDate = challenge.get('endTime');
+	var incrementalWeek = challenge.get('incrementalWeek');
 
 	console.log('countLikeForUsersChallenge fbUsersId.length: ' + fbUsersId.length + ' , startDate: ' + startDate + ' , endDate: ' + endDate + ' , incrementalWeek: ' + incrementalWeek);
 
@@ -593,7 +613,7 @@ function countLikeForUsersChallenge(challenge, callback) {
 		var promise2 = Parse.Promise.as();
 		promise2 = promise2.then(function () {
 			if (challenge.get('accepted') == true) {
-				return countLikeForUserWeek(userObject.get('fbUserId'), challenge.get('startTime'), challenge.get('endTime'));
+				return countLikeForUserWeek(userObject.get('fbUserId'), challenge);
 			} else {
 				return 0;
 			}
@@ -610,8 +630,8 @@ function countLikeForUsersChallenge(challenge, callback) {
 	return promise;
 }
 
-function countLikeForUserWeek(fbUserId, startDate, endDate, callback) {
-
+function countLikeForUserWeek(fbUserId, challenge, callback) {
+	/*
 	startDate.setHours(00);
 	startDate.setMinutes(00);
 	startDate.setSeconds(01);
@@ -629,6 +649,15 @@ function countLikeForUserWeek(fbUserId, startDate, endDate, callback) {
 	var day = startDate.getUTCDate();
 	var year = startDate.getUTCFullYear();
 	var incrementalWeek = year + month + day;
+	*/
+
+	var startDate = challenge.get('startTime');
+	var endDate = challenge.get('endTime');
+	var startDateTimestamp = challenge.get('startDateTimestamp');
+	var endDateTimestamp = challenge.get('endDateTimestamp');
+	var fbStartDateTimestamp = challenge.get('fbStartDateTimestamp');
+	var fbEndDateTimestamp = challenge.get('fbEndDateTimestamp');
+	var incrementalWeek = challenge.get('incrementalWeek');
 
 	console.log('countLikeForUserWeek fbUserId: ' + fbUserId + ' , startDate: ' + startDate + ' , endDate: ' + endDate + ' , incrementalWeek: ' + incrementalWeek);
 
