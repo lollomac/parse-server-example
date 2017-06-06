@@ -790,53 +790,8 @@ Parse.Cloud.define("doCreateChallenge", function (request, response) {
 	var fbStartDateTimestamp = request.params.fbStartDateTimestamp;
 	var fbEndDateTimestamp = request.params.fbEndDateTimestamp;
 	var incrementalWeek = request.params.incrementalWeek;
-	/*
-	if (typeDate == 1) {
-		//current week default
-		startDate = getMonday(new Date());
-		startDate.setHours(00);
-		startDate.setMinutes(00);
-		startDate.setSeconds(01);
-		startDateTimestamp = startDate.getTime();
-		fbStartDateTimestamp = Math.round(startDate.getTime() / 1000);
+	var fbEventId = request.params.fbEventId;
 
-		endDate = new Date()
-		endDate.setDate(startDate.getDate() + 7);
-		endDate.setHours(23);
-		endDate.setMinutes(59);
-		endDate.setSeconds(59);
-		endDateTimestamp = endDate.getTime();
-		fbEndDateTimestamp = Math.round(endDate.getTime() / 1000);
-
-		var month = startDate.getUTCMonth() + 1;
-		var day = startDate.getUTCDate();
-		var year = startDate.getUTCFullYear();
-		incrementalWeek = year + month + day;
-	}
-
-	if (typeDate == 2) {
-		//current weekend
-		startDate = getFriday(new Date());
-		startDate.setHours(00);
-		startDate.setMinutes(00);
-		startDate.setSeconds(01);
-		startDateTimestamp = startDate.getTime();
-		fbStartDateTimestamp = Math.round(startDate.getTime() / 1000);
-
-		endDate = new Date()
-		endDate.setDate(startDate.getDate() + 3);
-		endDate.setHours(23);
-		endDate.setMinutes(59);
-		endDate.setSeconds(59);
-		endDateTimestamp = endDate.getTime();
-		fbEndDateTimestamp = Math.round(endDate.getTime() / 1000);
-
-		var month = startDate.getUTCMonth() + 1;
-		var day = startDate.getUTCDate();
-		var year = startDate.getUTCFullYear();
-		incrementalWeek = year + month + day;
-	}
-	*/
 	var jsonResponse = {};
 	var parseUserObject = [];
 
@@ -864,38 +819,7 @@ Parse.Cloud.define("doCreateChallenge", function (request, response) {
 			for (var i = 0; i < parseUserObject.length; i++) {
 				relationUsers.add(parseUserObject[i]);
 			}
-			/*
-			if (typeChallenge == 1) {
-				//user vs user
-				console.log("fbAdminUsersId " + fbAdminUsersId);
-				console.log("parseUserObject[0] " + parseUserObject[0].get('fbUserId'));
-				console.log("parseUserObject[1] " + parseUserObject[1].get('fbUserId'));
-				if (parseUserObject[0].get('fbUserId') == fbAdminUsersId) {
-					challenge.set("user1", parseUserObject[0]);
-					challenge.set("user2", parseUserObject[1]);
-				} else {
-					challenge.set("user1", parseUserObject[1]);
-					challenge.set("user2", parseUserObject[0]);
-				}
-			}
 
-			if (typeChallenge == 2) {
-				//group vs group
-			}
-
-			if (typeChallenge == 3) {
-				//internal group friends
-				for (var i = 0; i < parseUserObject.length; i++) {
-					if (parseUserObject[i].get('fbUserId') == fbAdminUsersId) {
-						challenge.set("user1", parseUserObject[i]);
-						break;
-
-					}
-				}
-			}
-			*/
-			challenge.set("typeChallenge", typeChallenge);
-			//challenge.set("typeDate", typeDate);
 			challenge.set("accepted", false);
 			challenge.set("startTime", startDate);
 			challenge.set("endTime", endDate);
@@ -904,6 +828,7 @@ Parse.Cloud.define("doCreateChallenge", function (request, response) {
 			challenge.set("incrementalWeek", incrementalWeek);
 			challenge.set("fbStartDateTimestamp", fbStartDateTimestamp);
 			challenge.set("fbEndDateTimestamp", fbEndDateTimestamp);
+			challenge.set("fbEventId", fbEventId);
 
 			challenge.save({
 				success: function (challenge) {
