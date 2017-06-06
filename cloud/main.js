@@ -778,8 +778,7 @@ function getUser(objectId) {
 
 Parse.Cloud.define("doCreateChallenge", function (request, response) {
 
-	var typeChallenge = request.params.typeChallenge;
-	var typeDate = request.params.typeDate;
+	//var typeChallenge = request.params.typeChallenge;
 	var fbUsersId = request.params.fbUsersId;
 	var fbAdminUsersId = request.params.fbAdminUsersId;
 
@@ -894,7 +893,7 @@ Parse.Cloud.define("doCreateChallenge", function (request, response) {
 				}
 			}
 			*/
-			challenge.set("typeChallenge", typeChallenge);
+			//challenge.set("typeChallenge", typeChallenge);
 			//challenge.set("typeDate", typeDate);
 			challenge.set("accepted", false);
 			challenge.set("startTime", startDate);
@@ -1020,8 +1019,6 @@ Parse.Cloud.define("doReturnMyChallenge", function (request, response) {
 									challengeObject['fbStartDateTimestamp'] = challenge.get('fbStartDateTimestamp');
 									challengeObject['fbEndDateTimestamp'] = challenge.get('fbEndDateTimestamp');
 									challengeObject['incrementalWeek'] = challenge.get('incrementalWeek');
-									challengeObject['typeChallenge'] = challenge.get('typeChallenge');
-									challengeObject['typeDate'] = challenge.get('typeDate');
 									challengeObject['accepted'] = challenge.get('accepted');
 									responseArray.push(challengeObject);
 									return Parse.Promise.as();
