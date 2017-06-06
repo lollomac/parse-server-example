@@ -361,7 +361,11 @@ function countInstagramLikeForUsersChallenge(challenge, callback) {
 
 		var promise2 = Parse.Promise.as();
 		promise2 = promise2.then(function () {
-			return countInstagramLikeForUserWeek(userObject.get('fbUserId'), challenge.get('startTime'), challenge.get('endTime'));
+			if (challenge.get('accepted') == true) {
+				return countInstagramLikeForUserWeek(userObject.get('fbUserId'), challenge.get('startTime'), challenge.get('endTime'));
+			} else {
+				return 0;
+			}
 		}).then(function (total_like) {
 			userJson['total_like'] = total_like;
 			usersArray.push(userJson);
@@ -588,7 +592,11 @@ function countLikeForUsersChallenge(challenge, callback) {
 
 		var promise2 = Parse.Promise.as();
 		promise2 = promise2.then(function () {
-			return countLikeForUserWeek(userObject.get('fbUserId'), challenge.get('startTime'), challenge.get('endTime'));
+			if (challenge.get('accepted') == true) {
+				return countLikeForUserWeek(userObject.get('fbUserId'), challenge.get('startTime'), challenge.get('endTime'));
+			} else {
+				return 0;
+			}
 		}).then(function (total_like) {
 			userJson['total_like'] = total_like;
 			usersArray.push(userJson);
