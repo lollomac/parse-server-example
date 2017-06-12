@@ -366,7 +366,8 @@ function countInstagramLikeForUsersChallenge(challenge, callback) {
 
 		var promise2 = Parse.Promise.as();
 		promise2 = promise2.then(function () {
-			if (challenge.get('accepted') == true) {
+			var today = new Date();
+			if (challenge.get('accepted') == true && today.getTime() > endDate.getTime() && today.getTime() < endDate.getTime()) {
 				return countInstagramLikeForUserWeek(userObject.get('fbUserId'), challenge);
 			} else {
 				return 0;
@@ -612,7 +613,7 @@ function countLikeForUsersChallenge(challenge, callback) {
 
 		var promise2 = Parse.Promise.as();
 		promise2 = promise2.then(function () {
-			if (challenge.get('accepted') == true) {
+			if (challenge.get('accepted') == true && today.getTime() > endDate.getTime() && today.getTime() < endDate.getTime()) {
 				return countLikeForUserWeek(userObject.get('fbUserId'), challenge);
 			} else {
 				return 0;
