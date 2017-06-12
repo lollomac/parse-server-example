@@ -511,7 +511,39 @@ function countInstagramLikeForUserWeek(fbUserId, challenge, callback) {
 
 		return promise;
 	} else {
-		promise.resolve(0);
+		Parse.Cloud.useMasterKey();
+		var userQuery = new Parse.Query(Parse.User);
+		userQuery.equalTo("fbUserId", fbUserId);
+		userQuery.first
+			({
+				success: function (user) {
+
+					console.log(user.get('name'));
+					total_like = 0;
+					var queryLike = new Parse.Query("Like");
+							queryLike.equalTo('user', user);
+							queryLike.equalTo('incrementalWeek', incrementalWeek)
+							queryLike.find({
+								success: function (results_likes) {
+
+									console.log('results_likes ' + results_likes);
+									var like;
+									if (results_likes.length > 0) {
+										like = results_likes[0];
+										total_like = like.get('LikeCount')
+									}
+									promise.resolve(total_like);
+								},
+								error: function (error) {
+									promise.resolve(0);
+								}
+							});
+
+				},
+				error: function () {
+					promise.resolve(0);
+				}
+			});
 		return promise;
 	}
 
@@ -663,7 +695,39 @@ function countLikeForUserWeek(fbUserId, challenge, callback) {
 
 		return promise;
 	} else {
-		promise.resolve(0);
+		Parse.Cloud.useMasterKey();
+		var userQuery = new Parse.Query(Parse.User);
+		userQuery.equalTo("fbUserId", fbUserId);
+		userQuery.first
+			({
+				success: function (user) {
+					
+					total_like = 0;
+					var queryLike = new Parse.Query("Like");
+						queryLike.equalTo('user', user);
+						queryLike.equalTo('incrementalWeek', incrementalWeek)
+						queryLike.find({
+							success: function (results_likes) {
+								var like;
+								if (results_likes.length > 0) {
+									like = results_likes[0];
+									console.log("***************** LikeCountInstagram " + like.get('LikeCountInstagram'));
+									total_like = like.get('LikeCountInstagram');
+									console.log('***************+* total_like ' + total_like);
+									
+								}
+								promise.resolve(total_like);
+							},
+							error: function (error) {
+								promise.resolve(0);
+							}
+						});
+				},
+				error: function () {
+					promise.resolve(0);
+				}
+			});
+
 		return promise;
 	}
 
