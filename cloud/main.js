@@ -711,8 +711,8 @@ function countLikeForUserWeek(fbUserId, challenge, callback) {
 								var like;
 								if (results_likes.length > 0) {
 									like = results_likes[0];
-									console.log("***************** LikeCountInstagram " + like.get('LikeCountInstagram'));
-									total_like = like.get('LikeCountInstagram');
+									console.log("***************** LikeCount " + like.get('LikeCount'));
+									total_like = like.get('LikeCount');
 									console.log('***************+* total_like ' + total_like);
 									
 								}
