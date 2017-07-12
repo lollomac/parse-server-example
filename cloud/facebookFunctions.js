@@ -63,7 +63,7 @@ Parse.Cloud.define("getFacebookFeeds", function (request, response) {
 function updateFacebookFeed(user, FBfeed, callback) {
 
 	var promise = new Parse.Promise();
-	console.log("feed id ", FBfeed["id"]);
+	console.log("feed id ", FBfeed.get('id'));
 	var query = new Parse.Query("Feed");
 	query.equalTo('feedId', FBfeed["id"]);
 	query.find({
