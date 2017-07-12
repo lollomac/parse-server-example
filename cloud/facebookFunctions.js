@@ -36,7 +36,7 @@ Parse.Cloud.define("getFacebookFeeds", function (request, response) {
 									var promise = new Parse.Promise();
 
 								}).then(function () {
-									return updateFacebookFeed(feed);
+									return updateFacebookFeed(user, feed);
 
 								}).then(function () {
 									return Parse.Promise.as();
@@ -63,9 +63,9 @@ Parse.Cloud.define("getFacebookFeeds", function (request, response) {
 function updateFacebookFeed(user, FBfeed, callback) {
 
 	var promise = new Parse.Promise();
-	console.log("feed id ", FBfeed.get('id'));
+	console.log("feed id ", FBfeed.id);
 	var query = new Parse.Query("Feed");
-	query.equalTo('feedId', FBfeed["id"]);
+	query.equalTo('feedId', FBfeed.id);
 	query.find({
 		success: function (results_feeds) {
 			var feed;
@@ -80,7 +80,7 @@ function updateFacebookFeed(user, FBfeed, callback) {
 				feed.set("socialType", 1);
 				feed.set("likes", FBfeed.likes.summary.total_count);
 				feed.set("createdTime", FBfeed.created_time);
-				feed.set("feedId", FBfeed["id"]);
+				feed.set("feedId", FBfeed.id);
 				feed.set("user", user);
 				
 
