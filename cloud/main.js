@@ -1,6 +1,4 @@
-
-
-
+require('cloud/facebookFunctions.js');
 var _ = require('underscore');
 
 Parse.Cloud.define("test", function (request, response) {
@@ -549,6 +547,8 @@ function countInstagramLikeForUserWeek(fbUserId, challenge, callback) {
 
 
 }
+
+
 
 function countLikeForUsersChallenge(challenge, callback) {
 	var fbUsersId = challenge.relation('users');
