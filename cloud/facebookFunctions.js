@@ -13,7 +13,7 @@ Parse.Cloud.define("getFacebookFeeds", function (request, response) {
 		({
 			success: function (user) {
 				var fbUserAccessToken = user.get('fbUserAccessToken')
-				var path = 'https://graph.facebook.com/v2.9/me?fields=feed.limit(100){picture,type,attachments,from,created_time,likes.summary(1)}&access_token=' + fbUserAccessToken;
+				var path = 'https://graph.facebook.com/v2.9/me?fields=feed.limit(100){id,picture,type,attachments,from,created_time,likes.summary(1)}&access_token=' + fbUserAccessToken;
 
 				Parse.Cloud.httpRequest({
 					url: path
@@ -33,7 +33,7 @@ Parse.Cloud.define("getFacebookFeeds", function (request, response) {
 							var promise = Parse.Promise.as();
 							console.log("myFeeds " + myFeeds);
 							_.each(myFeeds, function (feed) {
-								console.log("feed " + feed);
+								console.log(JSON.stringify(feed));
 								promise = promise.then(function () {
 									var promise = new Parse.Promise();
 
