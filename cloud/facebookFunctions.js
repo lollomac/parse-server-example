@@ -79,7 +79,7 @@ function updateFacebookFeed(user, FBfeed, callback) {
 			if (feed != null) {
 				feed.set("socialType", 1);
 				feed.set("likes", FBfeed.likes.summary.total_count);
-				feed.set("createdTime", FBfeed.created_time);
+				feed.set("createdTime", new Date(FBfeed.created_time));
 				feed.set("feedId", FBfeed.id);
 				feed.set("user", user);
 				
