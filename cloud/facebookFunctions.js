@@ -18,8 +18,10 @@ Parse.Cloud.define("getFacebookFeeds", function (request, response) {
 				Parse.Cloud.httpRequest({
 					url: path
 				}).then(function (httpResponse) {
-
-
+					console.log(JSON.stringify(httpResponse));
+					console.log("httpResponse " + httpResponse);
+					console.log("httpResponse.data " + httpResponse.data);
+					console.log("httpResponse.data.feed " + httpResponse.data.feed);
 
 					if (httpResponse.data.feed != undefined) {
 						var feeds = httpResponse.data.feed.data;
