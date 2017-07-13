@@ -65,7 +65,7 @@ function updateInstagramFeed(user, instagramFeed, callback) {
 	var promise = new Parse.Promise();
 	console.log("instagramFeed id ", instagramFeed.id);
 	var query = new Parse.Query("Feed");
-	query.equalTo('feedId', FBfeed.id);
+	query.equalTo('feedId', instagramFeed.id);
 	query.find({
 		success: function (results_feeds) {
 			var feed;
@@ -78,10 +78,10 @@ function updateInstagramFeed(user, instagramFeed, callback) {
 			console.log("feed ", feed);
 			if (feed != null) {
 				feed.set("socialType", 2);
-				feed.set("likes", FBfeed.likes.count);
-				feed.set("createdTime", new Date(parseInt(FBfeed.created_time) * 1000));
-				feed.set("feedId", FBfeed.id);
-				feed.set("pictureUrl", FBfeed.images.standard_resolution.url);
+				feed.set("likes", instagramFeed.likes.count);
+				feed.set("createdTime", new Date(parseInt(instagramFeed.created_time) * 1000));
+				feed.set("feedId", instagramFeed.id);
+				feed.set("pictureUrl", instagramFeed.images.standard_resolution.url);
 				feed.set("user", user);
 				
 
