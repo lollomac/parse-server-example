@@ -1,4 +1,6 @@
 require('../cloud/facebookFunctions.js');
+require('../cloud/instagramFunctions.js');
+
 var _ = require('underscore');
 
 Parse.Cloud.define("test", function (request, response) {
