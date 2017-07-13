@@ -13,7 +13,7 @@ Parse.Cloud.define("getFacebookFeeds", function (request, response) {
 		({
 			success: function (user) {
 				var fbUserAccessToken = user.get('fbUserAccessToken')
-				var path = 'https://graph.facebook.com/v2.9/me?fields=feed.limit(100){id,full_picture,type,attachments,from,created_time,likes.summary(1)}&access_token=' + fbUserAccessToken;
+				var path = 'https://graph.facebook.com/v2.9/me?fields=feed.limit(200){id,full_picture,type,attachments,from,created_time,likes.summary(1)}&access_token=' + fbUserAccessToken;
 
 				Parse.Cloud.httpRequest({
 					url: path
